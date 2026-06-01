@@ -20,7 +20,7 @@
 // ═══════════════════════════════════════════════════════
 
 // ── Apps Script 部署網址 ──
-const STOCK_API_URL = 'https://script.google.com/macros/s/AKfycbwWL8xDfE10qVjY6Qnq7kleWn9Qhlr-44c0QGBtuavUSgUx_BcuHf0h0hrsDwJjzZu4EQ/exec';
+const STOCK_API_URL = 'https://script.google.com/macros/s/AKfycbz5xrSYvw6MNUUWJxGaOcXYA3qXfejnhqb6sUTY_ZQejfCnWUyogwT0qmBNsw0aOwrhxA/exec';
 
 // 全域商品陣列（由 loadProducts() 填入）
 let PRODUCTS = [];
