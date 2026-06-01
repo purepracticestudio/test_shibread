@@ -1,28 +1,10 @@
 // ═══════════════════════════════════════════════════════
-//  products.js — 動態商品載入
-//  v2.0  2026-06
-//
-//  【業者操作說明】
-//  所有商品設定皆在 Google Sheets「預定商品」工作表管理。
-//  網站程式碼不需要修改。
-//
-//  Google Sheets 欄位說明：
-//  A: 網站預定更新日期（格式 yyyy/MM/dd HH:mm，留空表示立即依 C 欄決定）
-//  B: 預定日期（出貨/送貨日，格式 MM/dd，顯示給客戶）
-//  C: 開關 → 上架 / 下架 / 停售
-//  D: 商品名稱
-//  E: 價格
-//  F: 麵糰小標
-//  G: 描述
-//  H: 成份
-//  I: 標籤（人氣指定款 / 大人和小孩最愛 / New / 無）
-//  J: 圖片網址（Netlify 路徑，例如 images/img_01.jpg）
+//  products.js — 動態商品載入 v2.2  2026-06
 // ═══════════════════════════════════════════════════════
 
-// ── Apps Script 部署網址 ──
-const STOCK_API_URL = 'https://script.google.com/macros/s/AKfycbz5xrSYvw6MNUUWJxGaOcXYA3qXfejnhqb6sUTY_ZQejfCnWUyogwT0qmBNsw0aOwrhxA/exec';
+const STOCK_API_URL = 'https://script.google.com/macros/s/AKfycbwUyoUOQKOxCfzZtJhDwSIhaBuuMM9VMAl52XjIcL78iXDZZbjFV8bTA8T--5JJfWacSQ/exec';
 
-// 全域商品陣列（由 loadProducts() 填入）
+// 全域商品陣列（cart.js 也會使用這個陣列）
 let PRODUCTS = [];
 
 // ═══════════════════════════════════════
@@ -31,21 +13,27 @@ let PRODUCTS = [];
 function loadProducts() {
   return new Promise((resolve) => {
     const callbackName = 'productsCallback_' + Date.now();
-    const script       = document.createElement('script');
+    const script = document.createElement('script');
 
     window[callbackName] = function(data) {
       try {
         if (data.error) {
           console.warn('商品資料錯誤:', data.error);
-          resolve({ deliveryDate: '', products: [] });
+          resolve({ deliveryDate: '' });
           return;
         }
-        // 填入全域陣列
-        PRODUCTS = data.products || [];
-        resolve({ deliveryDate: data.deliveryDate || '', products: PRODUCTS });
+        const raw = data.products || [];
+
+        // 只取 active: true 的商品，
+        // 並重新指定 id = 0, 1, 2... 讓 cart.js 可以正確比對
+        PRODUCTS = raw
+          .filter(p => p.active === true)
+          .map((p, idx) => ({ ...p, id: idx }));
+
+        resolve({ deliveryDate: data.deliveryDate || '' });
       } catch(e) {
         console.warn('商品資料解析失敗', e);
-        resolve({ deliveryDate: '', products: [] });
+        resolve({ deliveryDate: '' });
       } finally {
         delete window[callbackName];
         if (document.body.contains(script)) document.body.removeChild(script);
@@ -56,28 +44,31 @@ function loadProducts() {
     script.onerror = function() {
       console.warn('商品資料讀取失敗');
       delete window[callbackName];
-      resolve({ deliveryDate: '', products: [] });
+      resolve({ deliveryDate: '' });
     };
     document.body.appendChild(script);
-
-    // 8 秒 timeout
-    setTimeout(() => resolve({ deliveryDate: '', products: PRODUCTS }), 8000);
+    setTimeout(() => resolve({ deliveryDate: '' }), 8000);
   });
 }
 
 // ═══════════════════════════════════════
-//  2. 從 Apps Script 讀取即時庫存（沿用原架構）
+//  2. 讀取即時庫存
+//     PRODUCTS[i].id 現在是 0,1,2...
+//     但庫存工作表的 key 是原始 D 欄值（也是 0,1,2...）
+//     需要用原始 stockId 比對，所以在 loadProducts 時保留 stockId
 // ═══════════════════════════════════════
 function loadStocks() {
   if (!STOCK_API_URL) return Promise.resolve();
   return new Promise((resolve) => {
     const callbackName = 'stockCallback_' + Date.now();
-    const script       = document.createElement('script');
+    const script = document.createElement('script');
 
     window[callbackName] = function(data) {
       try {
         PRODUCTS.forEach(p => {
-          if (data[p.id] !== undefined) p.stock = Number(data[p.id]);
+          // stockId 是原始 D 欄值（字串），庫存回傳的 key 也是字串
+          const key = String(p.stockId);
+          if (data[key] !== undefined) p.stock = Number(data[key]);
         });
       } catch(e) {
         console.warn('庫存資料解析失敗', e);
@@ -95,30 +86,25 @@ function loadStocks() {
       resolve();
     };
     document.body.appendChild(script);
-
     setTimeout(resolve, 5000);
   });
 }
 
 // ═══════════════════════════════════════
-//  3. 更新頁面上的日期文字（nav / section title / notice）
+//  3. 更新頁面日期文字
 // ═══════════════════════════════════════
 function applyDeliveryDate(dateStr) {
   if (!dateStr) return;
 
-  // nav desktop
   const navLink = document.querySelector('.nav-links a[href="#products"]');
   if (navLink) navLink.textContent = dateStr + ' 預定商品';
 
-  // nav mobile
   const mobileLink = document.querySelector('.mobile-menu a[href="#products"]');
   if (mobileLink) mobileLink.textContent = dateStr + ' 預定商品';
 
-  // section title
   const sectionTitle = document.querySelector('#products .section-title');
   if (sectionTitle) sectionTitle.textContent = dateStr + ' 預定商品';
 
-  // notice 預訂並製作日
   const noticeDate = document.getElementById('delivery-date-display');
   if (noticeDate) noticeDate.textContent = dateStr;
 }
@@ -130,28 +116,25 @@ function renderProducts() {
   const grid = document.getElementById('products-grid');
   if (!grid) return;
 
-  // 只顯示 active: true 的商品
-  const activeProducts = PRODUCTS.filter(p => p.active !== false);
+  const loading = document.getElementById('productsLoading');
+  if (loading) loading.style.display = 'none';
 
-  if (activeProducts.length === 0) {
-    grid.innerHTML = '<p style="text-align:center;color:var(--muted);padding:3rem 1rem;">目前沒有上架中的商品，敬請期待！</p>';
+  if (PRODUCTS.length === 0) {
+    grid.innerHTML = '<p style="text-align:center;color:var(--muted);padding:3rem 1rem;grid-column:1/-1;">目前沒有上架中的商品，敬請期待！</p>';
     return;
   }
 
-  grid.innerHTML = activeProducts.map(p => {
-    const isFeatured = p.featured;
-    const stock      = p.stock ?? 99;
-    const isSoldOut  = stock <= 0;
-    const isLow      = stock > 0 && stock <= 3;
+  grid.innerHTML = PRODUCTS.map(p => {
+    const stock     = p.stock ?? 99;
+    const isSoldOut = stock <= 0;
+    const isLow     = stock > 0 && stock <= 3;
 
-    // ── 庫存狀態標示 ──
     const stockBadge = isSoldOut
       ? `<div class="stock-badge stock-badge--out">已售完</div>`
       : isLow
         ? `<div class="stock-badge stock-badge--low">⚡ 僅剩 ${stock} 顆</div>`
         : '';
 
-    // ── 商品 badge ──
     const badgeHTML = p.badgeSvg
       ? `<div class="product-badge product-badge--new">
            <svg width="36" height="36" viewBox="0 0 36 36">
@@ -168,12 +151,10 @@ function renderProducts() {
         ? `<div class="product-badge">${p.badge}</div>`
         : '';
 
-    // ── 圖片 ──
     const imgHTML = p.image
       ? `<img src="${p.image}" alt="${p.name}" class="product-photo" loading="lazy">`
       : `<div class="bread-illustration"></div>`;
 
-    // ── 數量控制 ──
     const qtyHTML = isSoldOut ? '' : `
       <div class="qty-row">
         <button class="qty-btn" onclick="changeQty(${p.id}, -1)">−</button>
@@ -181,7 +162,6 @@ function renderProducts() {
         <button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button>
       </div>`;
 
-    // ── 加入購物車按鈕 ──
     const btnHTML = isSoldOut
       ? `<button class="add-to-cart add-to-cart--soldout" disabled>已售完</button>`
       : `<button class="add-to-cart" onclick="addToCart(${p.id})">
@@ -194,7 +174,7 @@ function renderProducts() {
          </button>`;
 
     return `
-      <div class="product-card${isFeatured ? ' product-card--featured' : ''}${isSoldOut ? ' product-card--soldout' : ''} reveal">
+      <div class="product-card${isSoldOut ? ' product-card--soldout' : ''} reveal">
         <div class="product-img">
           ${imgHTML}
           ${badgeHTML}
@@ -216,30 +196,22 @@ function renderProducts() {
 }
 
 // ═══════════════════════════════════════
-//  5. 主流程：載入商品 → 套用日期 → 載入庫存 → 渲染
+//  5. 主流程
 // ═══════════════════════════════════════
 (async function init() {
-  // 顯示 loading
   const loading = document.getElementById('productsLoading');
   if (loading) loading.style.display = 'flex';
 
   try {
-    // Step A：讀取商品資料（含 deliveryDate）
     const { deliveryDate } = await loadProducts();
-
-    // Step B：套用日期到 nav / title / notice
     applyDeliveryDate(deliveryDate);
-
-    // Step C：讀取即時庫存
     await loadStocks();
-
-    // Step D：渲染
     renderProducts();
-
   } catch(e) {
     console.error('商品初始化失敗', e);
-    renderProducts(); // 嘗試渲染（即使失敗也不讓畫面空白）
+    renderProducts();
   } finally {
+    const loading = document.getElementById('productsLoading');
     if (loading) loading.style.display = 'none';
   }
 })();

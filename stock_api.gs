@@ -3,7 +3,7 @@
 //  v2.0  2026-06  新增 action=products 動態商品端點
 // ═══════════════════════════════════════════════════════
 
-var SPREADSHEET_ID  = '1-1w0nO8FZQfbBoRt8Fqq2t5LD2cY1_zUY1W2Z09q5ug';
+var SPREADSHEET_ID  = '1TVZW3beibiSJuvQIu451_w7RAABDtsQTvauuv6L7yp4';
 var PRODUCT_SHEET_ID = '1-1w0nO8FZQfbBoRt8Fqq2t5LD2cY1_zUY1W2Z09q5ug'; // 預定商品工作表所在的 Spreadsheet
 var ORDER_SHEET     = '訂單資料';
 var STOCK_SHEET     = '庫存';
@@ -115,14 +115,26 @@ function getProducts() {
     }
 
     var products = [];
-    var idCounter = 0;
 
     for (var i = 2; i < data.length; i++) {
       var row = data[i];
 
-      // 跳過完全空白列
-      var dName = String(row[3] || '').trim();
-      if (dName === '') continue;
+      // 欄位對應（0-index）：
+      // row[0] = A 網站預定更新日期
+      // row[1] = B 預定出貨日
+      // row[2] = C 開關（上架/下架/停售）
+      // row[3] = D 商品ID（對應庫存工作表 A 欄）
+      // row[4] = E 商品名稱
+      // row[5] = F 價格
+      // row[6] = G 麵糰小標 tag
+      // row[7] = H 描述
+      // row[8] = I 成份
+      // row[9] = J 標籤 badge
+      // row[10]= K 圖片網址
+
+      // 跳過完全空白列（以商品名稱 E 欄判斷）
+      var eName = String(row[4] || '').trim();
+      if (eName === '') continue;
 
       // ── A 欄：定時上架邏輯 ──
       var scheduleCell = row[0];
@@ -139,7 +151,7 @@ function getProducts() {
         }
       }
 
-      // ── C 欄：開關狀態 ──
+      // ── C 欄：開關狀態（上架 → true，下架/停售 → false）──
       var switchVal = String(row[2] || '').trim();
       var cActive   = (switchVal === '上架');
 
@@ -147,11 +159,15 @@ function getProducts() {
       var isScheduledFuture = (scheduleDate !== null && scheduleDate > now);
       var active = cActive && !isScheduledFuture;
 
-      // ── 組裝商品物件 ──
-      var priceRaw = row[4];
+      // ── D 欄：商品 ID（對應庫存工作表 A 欄）──
+      var productId = String(row[3] || '').trim();
+
+      // ── F 欄：價格 ──
+      var priceRaw = row[5];
       var price    = (priceRaw !== '' && priceRaw !== null) ? Number(priceRaw) : 0;
 
-      var badgeRaw = String(row[8] || '').trim();
+      // ── J 欄：標籤 badge ──
+      var badgeRaw = String(row[9] || '').trim();
       var badge    = null;
       var badgeSvg = false;
       if (badgeRaw === '人氣指定款') {
@@ -163,19 +179,21 @@ function getProducts() {
       }
       // 「無」或空白 → badge = null
 
-      var imageRaw = String(row[9] || '').trim();
+      // ── K 欄：圖片網址 ──
+      var imageRaw = String(row[10] || '').trim();
 
       products.push({
-        id:          idCounter++,
+        id:          productId,                      // D 欄商品 ID（也作為庫存比對用）
+        stockId:     productId,                      // 庫存工作表 A 欄對應 ID
         active:      active,
-        name:        dName,
-        tag:         String(row[5] || '').trim(),
-        price:       price,
-        desc:        String(row[6] || '').trim(),
-        ingredients: String(row[7] || '').trim(),
-        badge:       badge,
+        name:        eName,                          // E 欄
+        tag:         String(row[6] || '').trim(),    // G 欄
+        price:       price,                          // F 欄
+        desc:        String(row[7] || '').trim(),    // H 欄
+        ingredients: String(row[8] || '').trim(),    // I 欄
+        badge:       badge,                          // J 欄
         badgeSvg:    badgeSvg,
-        image:       imageRaw,
+        image:       imageRaw,                       // K 欄
         stock:       15,     // 預設值，前端會用 loadStocks() 覆蓋
         featured:    false
       });
@@ -313,7 +331,8 @@ function updateBankCode(d) {
 
 // ════════════════════════════
 //  自動扣庫存（補填末五碼後）
-//  從「預定商品」工作表動態讀取商品名稱與庫存ID對應
+//  用商品名稱比對「預定商品」工作表 E 欄，取得 D 欄商品 ID，
+//  再到「庫存」工作表 A 欄比對，扣除已售數量
 // ════════════════════════════
 function deductStock(body) {
   var stockSheet   = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(STOCK_SHEET);
@@ -322,17 +341,18 @@ function deductStock(body) {
   var productData  = productSheet.getDataRange().getValues();
   var cart         = body.cart || '';
 
-  // 動態建立 商品名稱 → stock sheet 中的 id 對應
+  // 動態建立「商品名稱（E欄） → 商品ID（D欄）」對應表
+  // 第 1、2 列為標題列，從第 3 列（i=2）起是資料
   var productMap = {};
-  var idCounter  = 0;
-  for (var i = 1; i < productData.length; i++) {
-    var pName = String(productData[i][3] || '').trim();
-    if (pName !== '') {
-      productMap[pName] = String(idCounter);
-      idCounter++;
+  for (var i = 2; i < productData.length; i++) {
+    var pId   = String(productData[i][3] || '').trim(); // D 欄：商品ID
+    var pName = String(productData[i][4] || '').trim(); // E 欄：商品名稱
+    if (pName !== '' && pId !== '') {
+      productMap[pName] = pId;
     }
   }
 
+  // 比對購物車字串，找出每個商品的數量並扣庫存
   var names = Object.keys(productMap);
   for (var n = 0; n < names.length; n++) {
     var name  = names[n];
@@ -341,10 +361,12 @@ function deductStock(body) {
     if (match) {
       var qty = parseInt(match[1]);
       var pid = productMap[name];
+      // 在庫存工作表 A 欄找到對應的商品 ID
       for (var i = 1; i < stockData.length; i++) {
         if (String(stockData[i][0]) === pid) {
           var currentSold = Number(stockSheet.getRange(i + 1, 4).getValue()) || 0;
           stockSheet.getRange(i + 1, 4).setValue(currentSold + qty);
+          Logger.log('扣庫存：' + name + ' x' + qty + '（ID: ' + pid + '）');
           break;
         }
       }
