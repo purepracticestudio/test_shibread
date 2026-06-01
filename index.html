@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>食麵包 Traveler Bread — 手感酸種麵包</title>
+  <link rel="icon" type="image/jpeg" href="images/img_logo.jpg">
+  <link rel="apple-touch-icon" href="images/img_logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600&family=Shippori+Mincho:wght@400;500;600&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?0506_v3">
+
+   <!-- ════ SEO 基礎 ════ -->
+  <title>食麵包 Traveler Bread｜新竹手感酸種麵包預訂</title>
+  <meta name="robots" content="noindex"><!--需要合作會開啟-->
+  <meta name="description" content="食麵包 Traveler Bread，新竹在地手工酸種麵包。天然魯邦種長時間低溫發酵，舊金山酸種、純鮮奶洛斯提克、黑芝麻酸種、瑪格麗特法國、亞麻籽蔓越莓酸種麵包、 <br>
+          ，每批限量預訂。">
+  <meta name="keywords" content="食麵包,酸種麵包,sourdough,新竹麵包,手工麵包,魯邦種,Traveler Bread,天然酵母,預訂麵包">
+  <meta name="author" content="食麵包 Traveler Bread">
+  <meta name="robots" content="index, follow">
+
+</head>
+<body>
+
+  <!-- ════ NAV ════ -->
+  <nav id="mainNav">
+    <a href="#" class="nav-logo">
+      <img src="images/img_logo.jpg" alt="食麵包 logo" class="nav-logo-img">
+      <div class="nav-logo-text">
+        食麵包
+        <span>Traveler Bread</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#story">關於我們</a></li>
+      <li ><a href="#products"><strong id="delivery-date-display">—</strong>預定商品</a></li>
+      <li><a href="#order-sec">訂購說明</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="https://www.instagram.com/shibread_traveler/" target="_blank" class="nav-ig">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="2" width="20" height="20" rx="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+        </svg>
+        @shibread_traveler
+      </a>
+      <button class="lookup-trigger" onclick="openOrderLookup()" title="查詢訂單">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <span class="nav-btn-text">查詢訂單</span>
+      </button>
+      <button class="cart-btn" id="cartToggle">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+        <span class="nav-btn-text">購物車</span>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <!-- Hamburger（手機才顯示）-->
+      <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- 手機選單 -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#story"     onclick="closeMobileMenu()">關於我們</a>
+    <a href="#products"  onclick="closeMobileMenu()"><strong id="delivery-date-display">—</strong>預定商品</a>
+    <a href="#order-sec" onclick="closeMobileMenu()">訂購說明</a>
+    <a href="#" onclick="closeMobileMenu(); openOrderLookup(); return false;">查詢訂單</a>
+    <a href="https://www.instagram.com/shibread_traveler/" target="_blank" onclick="closeMobileMenu()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="2" y="2" width="20" height="20" rx="5"/>
+        <circle cx="12" cy="12" r="4"/>
+        <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
+      </svg>
+      @shibread_traveler
+    </a>
+  </div>
+
+  <!-- ════ HERO ════ -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-tag">Handcrafted Sourdough · Taiwan</p>
+      <h1 class="hero-title">食麵包</h1>
+      <p class="hero-title-en">Traveler Bread</p>
+      <p class="hero-slogan">
+        用時間與溫度培育的魯邦種，<br>
+        為大人與孩子烘烤的每一顆麵包。<br><br>
+        <em style="color:var(--accent);font-style:normal;">從第一口，就感受到不一樣。</em>
+      </p>
+      <a href="#products" class="hero-cta">探索麵包</a>
+      <p class="hero-deco">slow fermentation · natural levain · hand-crafted</p>
+    </div>
+    <div class="hero-right">
+      <div class="hero-img-wrap">
+        <!-- Hero 封面圖片 -->
+        <img src="images/img_cover.png" alt="食麵包手工酸種麵包" class="hero-cover-img">
+        <div class="hero-img-overlay"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ STORY ════ -->
+  <section class="story" id="story">
+    <div class="story-inner reveal">
+      <div class="section-header">
+        <span class="section-en">our story</span>
+        <h2 class="section-title">關於食麵包</h2>
+        <div class="section-divider"></div>
+      </div>
+      <p class="story-text">食麵包誕生於對麵包最純粹的熱愛。我們使用<strong>天然魯邦種（levain）</strong>，以長時間低溫發酵，讓每顆麵包都擁有層次豐富的風味與扎實的手感。</p>
+      <p class="story-text">精選進口麵粉、海鹽、過濾水——最簡單的食材，在時間的魔法下，成就最真實的美味。</p>
+      <blockquote class="story-quote">"能讓大人跟小孩們都會很喜歡的麵包"</blockquote>
+      <p class="story-text">這是我們最初也是最核心的心願。無論是第一次嘗試酸種麵包的朋友，還是每天期待指定款的小帥兒，食麵包都想成為你餐桌上最溫暖的陪伴。</p>
+    </div>
+  </section>
+
+  <!-- ════ PRODUCTS ════ -->
+  <section class="products" id="products">
+    <div class="section-header reveal">
+      <span class="section-en">pre-order</span>
+      <h2 class="section-title"><strong id="delivery-date-display">—</strong>預定商品</h2>
+      <div class="section-divider"></div>
+    </div>
+
+    <!-- 注意事項區塊 -->
+    <div class="notice-block reveal">
+      <div class="notice-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        訂購注意事項
+      </div>
+      <ul class="notice-list">
+        <li>預訂並製作日：<strong id="delivery-date-display">—</strong></li>
+        <li>每筆預訂單至少 <strong>3 顆</strong>才成單，可以混合搭配</li>
+        <li>所有品項皆為<strong>預訂制</strong>，付款後才會安排製作</li>
+        <li>每批數量有限，<strong>額滿即止</strong></li>
+        <li><strong>訂單成立後恕不接受臨時取消</strong></li>
+         <li>通常是中午左右出爐置涼後包裝，並於下午外送或取貨。</li>
+        <li>
+          若有問題請私訊並加入追蹤 →
+          <a href="#footer-social"
+            onclick="document.getElementById('footer-social').scrollIntoView({behavior:'smooth'});return false;"
+            class="notice-link">聯絡我們</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 商品卡片由 products.js 動態產生 -->
+     <!--API 載入需要一段時間 加入 Loadding-->
+   <div class="products-grid" id="products-grid">
+  <div class="products-loading" id="productsLoading">
+    <div class="products-loading-spinner"></div>
+    <p>載入商品中...</p>
+  </div>
+</div>
+  </section>
+
+  <!-- ════ PHILOSOPHY ════ -->
+  <section class="philosophy">
+    <div class="philosophy-inner">
+      <div class="section-header reveal">
+        <span class="section-en">our craft</span>
+        <h2 class="section-title">製作理念</h2>
+        <div class="section-divider"></div>
+      </div>
+      <div class="philosophy-grid">
+        <div class="philosophy-item reveal">
+          <svg class="philosophy-icon" viewBox="0 0 52 52" fill="none" stroke="currentColor" stroke-width="1.3">
+            <circle cx="26" cy="26" r="20"/>
+            <path d="M26 14 v12 l8 4"/>
+            <path d="M16 36 Q26 42 36 36"/>
+          </svg>
+          <h3>長時間低溫發酵</h3>
+          <p>不催不趕，讓麵糰在低溫中緩慢熟成，發展出自然的層次風味與易消化的特性。</p>
+        </div>
+        <div class="philosophy-item reveal">
+          <svg class="philosophy-icon" viewBox="0 0 52 52" fill="none" stroke="currentColor" stroke-width="1.3">
+            <path d="M26 8 Q34 16 34 26 Q34 36 26 44 Q18 36 18 26 Q18 16 26 8Z"/>
+            <path d="M14 20 Q20 22 26 28 Q32 22 38 20"/>
+          </svg>
+          <h3>天然魯邦種</h3>
+          <p>以精選麵粉耐心培育的野生酵母，是每顆麵包風味的靈魂。</p>
+        </div>
+        <div class="philosophy-item reveal">
+          <svg class="philosophy-icon" viewBox="0 0 52 52" fill="none" stroke="currentColor" stroke-width="1.3">
+            <path d="M12 36 Q20 24 26 28 Q32 32 40 18"/>
+            <circle cx="26" cy="20" r="4"/>
+            <path d="M18 42 h16"/>
+            <path d="M22 38 v4 M30 38 v4"/>
+          </svg>
+          <h3>精選頂級食材</h3>
+          <p>法國小麥粉、日本小麥粉、德國有機黑麥粉——每種原料都是最佳選擇。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ ORDER INFO ════ -->
+  <section style="background:var(--primary);padding:5rem 2rem;text-align:center;position:relative;overflow:hidden;" id="order-sec">
+    <span style="font-family:'IM Fell English',serif;font-style:italic;font-size:0.82rem;color:var(--light-text);letter-spacing:0.25em;display:block;margin-bottom:1rem;">how to order</span>
+    <h2 style="font-family:'Shippori Mincho',serif;font-size:2rem;color:#FFFDF9;margin-bottom:1rem;font-weight:500;">訂購說明</h2>
+    <p style="font-size:0.88rem;color:rgba(255,255,255,0.65);line-height:2.5;margin-bottom:2.5rem;max-width:540px;margin-left:auto;margin-right:auto;">  每批限量手工製作唷 🍞<br>
+      選好麵包加入購物車 → 填寫資料 → 收到<strong style="color:#E3B5A4"> 匯款帳號</strong><br>
+      → 進行匯款後 → 回來食麵包官網完成轉帳 <strong style="color:#E3B5A4">填入末五碼</strong> 送出<br>
+      我們確認後透過 <strong style="color:#E3B5A4">Email 或 社群帳號</strong> 聯繫出貨時間<br>
+    </p>
+    <button
+      onclick="window.scrollTo({top:document.getElementById('products').offsetTop-80,behavior:'smooth'})"
+      style="display:inline-flex;align-items:center;gap:0.8rem;background:#E3B5A4;color:#3A2C28;padding:0.9rem 2.2rem;font-size:0.85rem;letter-spacing:0.15em;font-family:'Noto Serif TC',serif;border:none;cursor:pointer;transition:all 0.2s;"
+      onmouseover="this.style.background='#FFFDF9'"
+      onmouseout="this.style.background='#E3B5A4'">
+      立即選購 →
+    </button>
+  </section>
+
+  <!-- ════ FOOTER ════ -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <p class="footer-brand">
+          食麵包
+          <small>Traveler Bread</small>
+        </p>
+        <p class="footer-slogan">用時間與溫度，<br>為你烘烤每一顆有溫度的麵包。</p>
+
+        <!-- 社群連結 -->
+        <div class="footer-social" id="footer-social">
+          <a href="https://line.me/ti/p/~@shibread" target="_blank" class="footer-social-link"><!--https://line.me/ti/p/~@shibread_traveler-->
+           <!-- <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.124 2 11.2c0 3.77 2.386 7.062 5.95 8.942L7 22l3.24-1.696C11.42 20.75 11.704 20.8 12 20.8c5.523 0 10-4.124 10-9.6S17.523 2 12 2zm5.193 12.742l-1.333-.867c-.218-.14-.513-.098-.68.098l-.6.701c-.15.175-.4.218-.6.102-1.05-.576-1.876-1.402-2.451-2.451-.117-.2-.073-.45.102-.6l.701-.6c.196-.167.238-.462.098-.68l-.867-1.333c-.163-.25-.493-.325-.746-.173l-1.2.72c-.26.156-.4.45-.35.74.4 2.225 2.187 4.012 4.412 4.412.29.05.584-.09.74-.35l.72-1.2c.152-.253.077-.583-.173-.746z"/>
+            </svg>-->
+            LINE @shibread
+          </a>
+          <a href="https://www.instagram.com/shibread_traveler/" target="_blank" class="footer-social-link">
+            <!--<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="2" y="2" width="20" height="20" rx="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
+            </svg>-->
+            Instagram @shibread_traveler
+          </a>
+          <a href="https://www.threads.net/@wen_yi27" target="_blank" class="footer-social-link">
+            <!--<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.5 12.186v-.007C1.524 5.468 5.82 1.5 12.186 1.5h.007c3.494.023 6.141 1.22 7.864 3.459C21.5 6.8 22 8.64 22 10.84c0 2.51-1.078 4.396-3.036 5.303a4.617 4.617 0 01-1.664.372c-.527 0-1.023-.107-1.432-.256-.026.226-.052.45-.08.67-.254 2.041-1.505 3.252-3.462 3.252-.9 0-1.694-.285-2.263-.8a2.754 2.754 0 01-.877-2.078c0-1.856 1.35-3.26 3.62-3.26.38 0 .748.04 1.1.116-.06-.548-.233-.913-.54-1.138-.39-.285-.99-.43-1.836-.43h-.008c-1.39 0-2.332.475-2.793 1.41-.252.51-.38 1.12-.38 1.81 0 2.37 1.432 3.752 3.882 3.77 1.87.013 3.094-.636 3.836-2.028l1.633.874c-1.017 1.908-2.805 2.942-5.47 2.942z"/>
+            </svg>--> 
+            Threads @wen_yi27
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-info">
+        <h4>PRODUCTS</h4>
+        <p>
+          舊金山酸種麵包<br>
+          100% 純鮮奶洛斯提克 <br>
+          黑芝麻酸種麵包<br>
+          瑪格麗特法國 <br>
+          亞麻籽蔓越莓酸種麵包 <br>
+          德國黑麥酸種麵包 <br>
+          雙桃酸種麵包<br>
+          原味二階段酸種麵包<br>
+          無花果水滴巧克力二階段酸種麵包<br>
+          優格草莓核桃酸種麵包<br>
+          蜂蜜優格酸種麵包<br>
+          毛豆帕達起司酸種麵包<br>
+          <br>
+          <span style="font-size:0.74rem;color:rgba(255,255,255,0.28)">限量預訂制 · 每筆至少3顆起</span>
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 食麵包 Traveler Bread</span>
+      <span style="font-family:'IM Fell English',serif;font-style:italic;color:rgba(255,255,255,0.22)">handcrafted with love</span>
+    </div>
+  </footer>
+
+  <!-- ════ CART DRAWER ════ -->
+  <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h2>🛒 購物車</h2>
+      <button class="cart-close" onclick="closeCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cartItemsEl"></div>
+    <div class="cart-footer" id="cartFooterEl" style="display:none">
+      <div class="cart-row"><span>商品小計</span><span id="subtotalEl">$0</span></div>
+      <!-- 最少3顆提示 -->
+      <div id="cartMinWarn" style="display:none;background:rgba(192,103,90,0.1);border-left:3px solid #c0675a;padding:0.6rem 0.8rem;margin:0.6rem 0;font-size:0.78rem;color:#c0675a;line-height:1.7">
+        ⚠️ 至少 <strong>3 顆</strong>才成單，可以混合搭配
+      </div>
+      <div class="cart-total-row" style="margin-top:0.6rem">
+        <span class="cart-total-label">合計</span>
+        <span class="cart-total-val" id="totalEl">$0</span>
+      </div>
+      <button class="checkout-btn" id="checkoutBtn" onclick="openCheckout()">前往結帳 →</button>
+    </div>
+  </div>
+
+  <!-- ════ CHECKOUT MODAL ════ -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-hdr">
+        <h2>結帳</h2>
+        <button class="modal-close2" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- ════ 訂單查詢 MODAL ════ -->
+  <div class="lookup-overlay" id="lookupOverlay" onclick="if(event.target===this)closeLookup()">
+    <div class="lookup-modal">
+      <div class="lookup-hdr">
+        <h2>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:0.4rem">
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+          </svg>
+          查詢訂單 / 補填末五碼
+        </h2>
+        <button class="lookup-close" onclick="closeLookup()">✕</button>
+      </div>
+      <div class="lookup-body" id="lookupBody"></div>
+    </div>
+  </div>
+
+  <!-- ════ JavaScript ════ -->
+  <script src="products.js?0601_v5"></script>
+  <script src="cart.js?0506_v2"></script>
+  <script src="checkout.js?0511_v2"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadStocks();   // 先從 Google Sheets 讀庫存
+      renderProducts();     // 再渲染商品
+      initCart();
+      window.addEventListener('scroll', () => {
+        document.getElementById('mainNav').style.borderBottomColor =
+          window.scrollY > 20 ? 'rgba(114,87,82,0.2)' : 'rgba(114,87,82,0.12)';
+      });
+      // 每 60 秒自動更新一次庫存
+      setInterval(() => {
+      loadStocks().then(() => renderProducts());
+      }, 60 * 1000);
+    });
+
+
+    function attachRevealObserver() {
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const siblings = [...entry.target.parentElement.children];
+            const delay = siblings.indexOf(entry.target) * 100;
+            setTimeout(() => entry.target.classList.add('visible'), delay);
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.reveal:not(.visible)').forEach(el => obs.observe(el));
+    }
+    attachRevealObserver();
+
+    function toggleMobileMenu() {
+      const open = document.getElementById('mobileMenu').classList.toggle('open');
+      document.getElementById('hamburgerBtn').classList.toggle('open', open);
+    }
+    function closeMobileMenu() {
+      document.getElementById('mobileMenu').classList.remove('open');
+      document.getElementById('hamburgerBtn').classList.remove('open');
+    }
+    document.addEventListener('click', e => {
+      const menu = document.getElementById('mobileMenu');
+      const btn  = document.getElementById('hamburgerBtn');
+      if (menu.classList.contains('open') && !menu.contains(e.target) && !btn.contains(e.target)) {
+        closeMobileMenu();
+      }
+    });
+  </script>
+
+</body>
+</html>

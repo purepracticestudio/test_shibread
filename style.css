@@ -1,0 +1,1053 @@
+/* ═══════════════════════════════════════
+   style.css — 食麵包 Traveler Bread 網站樣式
+   ═══════════════════════════════════════ */
+
+/* ── 設計變數 ── */
+:root {
+  --primary:    #725752;
+  --accent:     #C45131;
+  --warm-bg:    #FAF6F1;
+  --cream:      #F5EDE3;
+  --dark:       #3A2C28;
+  --mid:        #9B7B72;
+  --light-text: #B89891;
+  --white:      #FFFDF9;
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Serif TC', serif;
+  background: var(--warm-bg);
+  color: var(--dark);
+  overflow-x: hidden;
+}
+
+/* 紙紋底色 */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.4;
+}
+
+/* ════════════════════════════
+   NAV
+════════════════════════════ */
+nav {
+  position: fixed; top: 0; width: 100%; z-index: 200;
+  padding: 0 2.5rem; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(250,246,241,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(114,87,82,0.12);
+  transition: border-color 0.3s;
+}
+.nav-logo {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 1.35rem; font-weight: 600;
+  color: var(--primary); letter-spacing: 0.08em; text-decoration: none;
+}
+.nav-logo span {
+  font-family: 'IM Fell English', serif; font-style: italic;
+  font-size: 0.82rem; color: var(--mid);
+  display: block; line-height: 1; letter-spacing: 0.15em;
+}
+.nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+.nav-links a {
+  font-size: 0.82rem; color: var(--primary); text-decoration: none;
+  letter-spacing: 0.12em; transition: color 0.2s; font-weight: 500;
+}
+.nav-links a:hover { color: var(--accent); }
+.nav-right { display: flex; align-items: center; gap: 1.2rem; }
+.nav-ig {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-size: 0.78rem; color: var(--mid); text-decoration: none;
+  letter-spacing: 0.06em; transition: color 0.2s;
+}
+.nav-ig:hover { color: var(--primary); }
+
+/* 購物車按鈕 */
+.cart-btn {
+  position: relative; background: var(--primary); color: var(--white);
+  border: none; padding: 0.5rem 1.1rem; cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: 'Noto Serif TC', serif; font-size: 0.8rem;
+  letter-spacing: 0.08em; transition: background 0.2s;
+}
+.cart-btn:hover { background: var(--dark); }
+.cart-count {
+  position: absolute; top: -6px; right: -6px;
+  background: var(--accent); color: var(--white);
+  width: 14px; height: auto; border-radius: 50%;
+  font-size: 0.65rem; font-weight: 700;
+  display: none; align-items: center; justify-content: center;
+}
+.cart-count.show { display: flex; }
+
+/* ════════════════════════════
+   HERO
+════════════════════════════ */
+.hero {
+  min-height: 100vh; display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-top: 64px; overflow: hidden;
+}
+.hero-left {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 6rem 4rem 6rem 5rem; position: relative; z-index: 2;
+}
+.hero-tag {
+  font-family: 'IM Fell English', serif; font-style: italic;
+  font-size: 0.82rem; color: var(--mid); letter-spacing: 0.2em;
+  margin-bottom: 1.2rem; opacity: 0;
+  animation: fadeUp 0.8s 0.2s ease forwards;
+}
+.hero-title {
+  font-family: 'Shippori Mincho', serif;
+  font-size: clamp(3.5rem, 7vw, 6rem); font-weight: 600;
+  line-height: 1.1; color: var(--primary); margin-bottom: 0.8rem;
+  opacity: 0; animation: fadeUp 0.9s 0.35s ease forwards;
+}
+.hero-title-en {
+  font-family: 'IM Fell English', serif; font-style: italic;
+  font-size: clamp(1rem, 2.5vw, 1.6rem); color: var(--accent);
+  letter-spacing: 0.04em; margin-bottom: 2rem;
+  opacity: 0; animation: fadeUp 0.9s 0.5s ease forwards;
+}
+.hero-slogan {
+  font-size: 0.95rem; line-height: 2; color: var(--mid);
+  max-width: 320px; margin-bottom: 3rem;
+  opacity: 0; animation: fadeUp 0.9s 0.65s ease forwards;
+}
+.hero-cta {
+  display: inline-flex; align-items: center; gap: 0.8rem;
+  background: var(--primary); color: var(--white);
+  padding: 0.9rem 2.2rem; font-size: 0.85rem; letter-spacing: 0.15em;
+  text-decoration: none; transition: background 0.3s, transform 0.2s;
+  font-family: 'Noto Serif TC', serif; border: none; cursor: pointer;
+  opacity: 0; animation: fadeUp 0.9s 0.8s ease forwards;
+}
+.hero-cta:hover { background: var(--dark); transform: translateY(-2px); }
+.hero-deco {
+  position: absolute; bottom: 3rem; left: 5rem;
+  font-family: 'IM Fell English', serif; font-style: italic;
+  font-size: 0.72rem; color: var(--light-text); letter-spacing: 0.2em;
+  opacity: 0; animation: fadeIn 1s 1.2s ease forwards;
+}
+.hero-right { position: relative; overflow: hidden; }
+.hero-img-wrap {
+  width: 100%; height: 100%; position: relative;
+  opacity: 0; animation: fadeIn 1.2s 0.4s ease forwards;
+}
+.hero-img-wrap::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to right, var(--warm-bg) 0%, transparent 20%),
+              linear-gradient(to bottom, transparent 70%, var(--warm-bg) 100%);
+}
+.bread-art { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+
+/* ════════════════════════════
+   SECTIONS COMMON
+════════════════════════════ */
+section { padding: 7rem 0; }
+.section-header { text-align: center; margin-bottom: 4rem; }
+.section-en {
+  font-family: 'IM Fell English', serif; font-style: italic;
+  font-size: 0.8rem; color: var(--accent); letter-spacing: 0.25em;
+  display: block; margin-bottom: 0.6rem;
+}
+.section-title {
+  font-family: 'Shippori Mincho', serif;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  color: var(--primary); font-weight: 600; letter-spacing: 0.08em;
+}
+.section-divider { width: 40px; height: 1px; background: var(--accent); margin: 1.2rem auto 0; }
+
+/* ════════════════════════════
+   STORY
+════════════════════════════ */
+.story { background: var(--cream); position: relative; overflow: hidden; }
+.story::before {
+  content: '食'; position: absolute;
+  font-family: 'Shippori Mincho', serif; font-size: 28rem;
+  color: rgba(114,87,82,0.04); right: -4rem; top: 50%;
+  transform: translateY(-50%); pointer-events: none;
+}
+.story-inner { max-width: 760px; margin: 0 auto; padding: 0 2rem; text-align: center; position: relative; z-index: 1; }
+.story-text { font-size: 1rem; line-height: 2.2; color: #5c3e38; margin-bottom: 1.8rem; }
+.story-text strong { color: var(--primary); font-weight: 600; }
+.story-quote {
+  font-family: 'IM Fell English', serif; font-style: italic;
+  font-size: 1.3rem; color: var(--accent); line-height: 1.8;
+  padding: 1.5rem 0;
+  border-top: 1px solid rgba(227,181,164,0.4);
+  border-bottom: 1px solid rgba(227,181,164,0.4);
+  margin: 2rem 0;
+}
+
+/* ════════════════════════════
+   PRODUCTS
+════════════════════════════ */
+.products { background: var(--warm-bg); }
+.products-grid {
+  max-width: 1100px; margin: 0 auto; padding: 0 2rem;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem;
+}
+.product-card {
+  background: var(--white); border: 1px solid rgba(227,181,164,0.3);
+  overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; position: relative;
+}
+.product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(114,87,82,0.12); }
+
+/* 特色商品：寬版橫排 */
+.product-card--featured { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; }
+.product-card--featured .product-img { height: 100%; min-height: 350px; }
+
+.product-img { height: 300px; overflow: hidden; position: relative; background: var(--cream); }
+.bread-illustration { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+.product-body { padding: 2rem; display: flex; flex-direction: column; gap: 0.7rem; }
+.product-tag { font-family: 'IM Fell English', serif; font-style: italic; font-size: 0.72rem; color: var(--mid); letter-spacing: 0.2em; }
+.product-name { font-family: 'Shippori Mincho', serif; font-size: 1.2rem; font-weight: 600; color: var(--primary); line-height: 1.5; }
+.product-price { font-family: 'IM Fell English', serif; font-size: 1.5rem; color: var(--accent); }
+.product-price small { font-size: 0.9rem; color: var(--mid); font-family: 'Noto Serif TC', serif; }
+.product-desc { font-size: 0.84rem; line-height: 1.9; color: #7a5a54; flex: 1; }
+.product-ingredients { font-size: 0.72rem; color: var(--light-text); line-height: 1.8; padding-top: 0.8rem; border-top: 1px solid rgba(227,181,164,0.3); }
+.product-badge { position: absolute; top: 1rem; right: 1rem; background: var(--primary); color: var(--white); font-size: 0.68rem; padding: 0.3rem 0.7rem; letter-spacing: 0.1em; }
+
+/* 數量控制 */
+.qty-row { display: flex; align-items: center; gap: 0.8rem; margin-top: 0.2rem; }
+.qty-btn {
+  width: 28px; height: 28px;
+  border: 1px solid rgba(114,87,82,0.3); background: transparent;
+  color: var(--primary); font-size: 1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.qty-btn:hover { background: var(--cream); }
+.qty-val { font-family: 'Shippori Mincho', serif; font-size: 1rem; min-width: 24px; text-align: center; }
+
+/* 加入購物車 */
+.add-to-cart {
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  background: transparent; border: 1.5px solid var(--primary); color: var(--primary);
+  padding: 0.65rem 1.2rem; font-family: 'Noto Serif TC', serif;
+  font-size: 0.82rem; letter-spacing: 0.1em; cursor: pointer;
+  transition: all 0.25s; margin-top: 0.3rem;
+}
+.add-to-cart:hover { background: var(--primary); color: var(--white); }
+
+/* ════════════════════════════
+   PHILOSOPHY
+════════════════════════════ */
+.philosophy { background: var(--cream); padding: 7rem 2rem; }
+.philosophy-inner { max-width: 1000px; margin: 0 auto; }
+.philosophy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; margin-top: 4rem; }
+.philosophy-item { text-align: center; padding: 2.5rem 1.5rem; background: var(--white); border-top: 2px solid var(--light-text); }
+.philosophy-icon { width: 52px; height: 52px; margin: 0 auto 1.2rem; color: var(--primary); }
+.philosophy-item h3 { font-family: 'Shippori Mincho', serif; font-size: 1rem; color: var(--primary); margin-bottom: 0.8rem; }
+.philosophy-item p { font-size: 0.82rem; color: var(--mid); line-height: 1.9; }
+
+/* ════════════════════════════
+   FOOTER
+════════════════════════════ */
+footer { background: var(--dark); padding: 4rem 2rem 2rem; color: rgba(255,255,255,0.55); }
+.footer-inner {
+  max-width: 1000px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+  padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 2rem;
+}
+.footer-brand { font-family: 'Shippori Mincho', serif; font-size: 1.4rem; font-weight: 600; color: var(--light-text); margin-bottom: 1rem; }
+.footer-brand small { display: block; font-family: 'IM Fell English', serif; font-style: italic; font-size: 0.75rem; color: var(--mid); margin-top: 0.2rem; }
+.footer-slogan { font-size: 0.83rem; line-height: 2; margin-bottom: 1.5rem; }
+.footer-ig { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--light-text); text-decoration: none; font-size: 0.82rem; transition: opacity 0.2s; }
+.footer-ig:hover { opacity: 0.75; }
+.footer-info h4 { font-family: 'Shippori Mincho', serif; font-size: 0.85rem; color: var(--light-text); letter-spacing: 0.15em; margin-bottom: 1.2rem; }
+.footer-info p { font-size: 0.8rem; line-height: 2.2; }
+.footer-bottom { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; font-size: 0.72rem; }
+
+/* ════════════════════════════
+   CART DRAWER
+════════════════════════════ */
+.cart-overlay {
+  position: fixed; inset: 0; background: rgba(30,15,10,0.45);
+  z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.cart-overlay.open { opacity: 1; pointer-events: all; }
+
+.cart-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: 420px; max-width: 95vw; background: var(--white);
+  z-index: 301; transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  display: flex; flex-direction: column;
+  box-shadow: -8px 0 40px rgba(60,30,20,0.15);
+}
+.cart-drawer.open { transform: translateX(0); }
+.cart-header {
+  padding: 1.5rem 1.8rem; border-bottom: 1px solid rgba(227,181,164,0.3);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.cart-header h2 { font-family: 'Shippori Mincho', serif; font-size: 1.1rem; color: var(--primary); }
+.cart-close { background: none; border: none; cursor: pointer; color: var(--mid); font-size: 1.4rem; }
+.cart-close:hover { color: var(--primary); }
+.cart-items { flex: 1; overflow-y: auto; padding: 1.5rem 1.8rem; }
+.cart-empty { text-align: center; padding: 4rem 0; color: var(--light-text); font-size: 0.88rem; line-height: 2.2; }
+.cart-item { display: grid; grid-template-columns: 52px 1fr auto; gap: 1rem; align-items: center; padding: 1rem 0; border-bottom: 1px solid rgba(227,181,164,0.2); }
+.cart-item-thumb { width: 52px; height: 52px; background: var(--cream); display: flex; align-items: center; justify-content: center; font-size: 1.7rem; }
+.cart-item-name { font-family: 'Shippori Mincho', serif; font-size: 0.88rem; color: var(--primary); margin-bottom: 0.25rem; }
+.cart-item-price { font-size: 0.78rem; color: var(--mid); }
+.cart-item-remove { background: none; border: none; color: var(--light-text); cursor: pointer; font-size: 0.9rem; padding: 0.2rem; }
+.cart-item-remove:hover { color: var(--primary); }
+.cart-item-qty { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.4rem; }
+.ci-qty-btn {
+  width: 22px; height: 22px; border: 1px solid rgba(114,87,82,0.25);
+  background: transparent; color: var(--primary); font-size: 0.9rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.ci-qty-btn:hover { background: var(--cream); }
+.ci-qty-val { font-size: 0.85rem; min-width: 20px; text-align: center; }
+.cart-footer { padding: 1.5rem 1.8rem; border-top: 1px solid rgba(227,181,164,0.3); }
+.cart-shipping-select {
+  width: 100%; border: 1px solid rgba(114,87,82,0.25); background: var(--cream);
+  color: var(--dark); padding: 0.5rem 0.8rem; font-family: 'Noto Serif TC', serif;
+  font-size: 0.82rem; margin-bottom: 1rem; cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23725752'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 0.8rem center;
+}
+.cart-row { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--mid); margin-bottom: 0.45rem; }
+.cart-total-row { display: flex; justify-content: space-between; align-items: baseline; margin: 0.8rem 0 1.5rem; }
+.cart-total-label { font-family: 'Shippori Mincho', serif; font-size: 0.9rem; color: var(--primary); }
+.cart-total-val { font-family: 'IM Fell English', serif; font-size: 1.6rem; color: var(--primary); }
+.checkout-btn { width: 100%; background: var(--primary); color: var(--white); border: none; padding: 1rem; font-family: 'Noto Serif TC', serif; font-size: 0.88rem; letter-spacing: 0.15em; cursor: pointer; transition: background 0.2s; }
+.checkout-btn:hover { background: var(--dark); }
+
+/* ════════════════════════════
+   CHECKOUT MODAL
+════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(30,15,10,0.55);
+  z-index: 400; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  display: flex; align-items: center; justify-content: center; padding: 1rem;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--white); width: 100%; max-width: 560px;
+  max-height: 92vh; overflow-y: auto;
+  transform: translateY(20px); transition: transform 0.3s;
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-hdr {
+  padding: 1.6rem 2rem 1.2rem; border-bottom: 1px solid rgba(227,181,164,0.3);
+  position: sticky; top: 0; background: var(--white); z-index: 5;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-hdr h2 { font-family: 'Shippori Mincho', serif; font-size: 1.1rem; color: var(--primary); }
+.modal-close2 { background: none; border: none; cursor: pointer; color: var(--mid); font-size: 1.4rem; }
+.modal-close2:hover { color: var(--primary); }
+.modal-body { padding: 2rem; }
+
+/* 步驟列 */
+.steps { display: flex; margin-bottom: 2rem; }
+.step { flex: 1; text-align: center; position: relative; }
+.step-dot {
+  width: 28px; height: 28px; border-radius: 50%;
+  margin: 0 auto 0.4rem; border: 2px solid rgba(114,87,82,0.2);
+  background: var(--white); display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; color: var(--light-text); font-weight: 700;
+  position: relative; z-index: 1; transition: all 0.3s;
+}
+.step.active .step-dot { border-color: var(--primary); background: var(--primary); color: var(--white); }
+.step.done   .step-dot { border-color: var(--accent);  background: var(--accent);  color: var(--white); }
+.step-label { font-size: 0.68rem; color: var(--light-text); }
+.step.active .step-label { color: var(--primary); font-weight: 600; }
+.step::before {
+  content: ''; position: absolute; top: 14px;
+  left: calc(50% + 14px); right: calc(-50% + 14px);
+  height: 1px; background: rgba(114,87,82,0.2);
+}
+.step:last-child::before { display: none; }
+
+/* 表單 */
+.form-group { margin-bottom: 1.2rem; }
+.form-group label { display: block; font-size: 0.78rem; color: var(--mid); letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+.form-group label .req { color: #c0675a; }
+.form-input {
+  width: 100%; border: 1px solid rgba(114,87,82,0.25);
+  background: var(--warm-bg); color: var(--dark);
+  padding: 0.7rem 0.9rem; font-family: 'Noto Serif TC', serif;
+  font-size: 0.88rem; outline: none; transition: border-color 0.2s;
+}
+.form-input:focus { border-color: var(--primary); }
+.form-input.err  { border-color: #c0675a; }
+textarea.form-input { resize: vertical; min-height: 78px; }
+.form-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-note { font-size: 0.73rem; color: var(--light-text); margin-top: 0.3rem; }
+.form-err  { font-size: 0.73rem; color: #c0675a; margin-top: 0.28rem; display: none; }
+.form-err.show { display: block; }
+
+/* Radio 選項 */
+.radio-group { display: flex; flex-direction: column; gap: 0.6rem; }
+.radio-opt { display: flex; align-items: flex-start; gap: 0.7rem; padding: 0.75rem 1rem; border: 1px solid rgba(114,87,82,0.2); cursor: pointer; transition: all 0.2s; }
+.radio-opt:hover   { border-color: var(--accent); background: rgba(227,181,164,0.06); }
+.radio-opt.selected{ border-color: var(--primary); background: rgba(114,87,82,0.04); }
+.radio-opt input   { margin-top: 3px; accent-color: var(--primary); }
+.rot strong { font-size: 0.85rem; color: var(--primary); display: block; margin-bottom: 0.12rem; }
+.rot small  { font-size: 0.74rem; color: var(--mid); }
+
+/* 訂單摘要 */
+.order-summary { background: var(--cream); padding: 1.2rem 1.4rem; margin-bottom: 1.4rem; border-left: 3px solid var(--accent); }
+.order-summary h4 { font-family: 'Shippori Mincho', serif; font-size: 0.85rem; color: var(--primary); margin-bottom: 0.8rem; }
+.sum-item  { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--mid); padding: 0.28rem 0; }
+.sum-item strong { color: var(--dark); }
+.sum-div   { border: none; border-top: 1px solid rgba(227,181,164,0.4); margin: 0.5rem 0; }
+.sum-total { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--primary); font-weight: 600; }
+
+/* 匯款資訊框 */
+.transfer-box { background: var(--cream); border: 1px solid rgba(227,181,164,0.5); padding: 1.4rem; margin-bottom: 1.4rem; }
+.transfer-box h4 { font-family: 'Shippori Mincho', serif; font-size: 0.9rem; color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+.tr-row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(227,181,164,0.25); }
+.tr-row:last-child { border-bottom: none; }
+.tr-label { font-size: 0.77rem; color: var(--mid); }
+.tr-val   { font-size: 0.88rem; color: var(--dark); font-weight: 500; font-family: 'Shippori Mincho', serif; display: flex; align-items: center; gap: 0.5rem; }
+.tr-amount{ font-family: 'IM Fell English', serif; font-size: 1.4rem; color: var(--primary); }
+.copy-btn {
+  background: none; border: 1px solid rgba(114,87,82,0.25); color: var(--mid);
+  font-size: 0.68rem; padding: 0.18rem 0.45rem; cursor: pointer;
+  transition: all 0.2s; font-family: 'Noto Serif TC', serif;
+}
+.copy-btn:hover { background: var(--primary); border-color: var(--primary); color: var(--white); }
+.transfer-note { font-size: 0.79rem; color: var(--mid); line-height: 1.9; background: rgba(227,181,164,0.12); padding: 1rem; margin-top: 1rem; }
+.transfer-note strong { color: var(--primary); }
+
+/* Modal 按鈕 */
+.modal-nav { display: flex; gap: 1rem; margin-top: 1.5rem; }
+.btn-back {
+  flex: 1; background: transparent; border: 1.5px solid rgba(114,87,82,0.28);
+  color: var(--mid); padding: 0.85rem; font-family: 'Noto Serif TC', serif;
+  font-size: 0.84rem; letter-spacing: 0.08em; cursor: pointer; transition: all 0.2s;
+}
+.btn-back:hover { border-color: var(--primary); color: var(--primary); }
+.btn-next {
+  flex: 2; background: var(--primary); color: var(--white); border: none;
+  padding: 0.85rem; font-family: 'Noto Serif TC', serif;
+  font-size: 0.84rem; letter-spacing: 0.12em; cursor: pointer; transition: background 0.2s;
+}
+.btn-next:hover { background: var(--dark); }
+.btn-full { flex: 1; width: 100%; }
+
+/* 成功畫面 */
+.success-wrap { text-align: center; padding: 2rem 0; }
+.success-icon {
+  width: 64px; height: 64px; background: rgba(114,87,82,0.1);
+  border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; margin: 0 auto 1.5rem;
+}
+.success-wrap h3 { font-family: 'Shippori Mincho', serif; font-size: 1.25rem; color: var(--primary); margin-bottom: 0.6rem; }
+.success-order { font-family: 'IM Fell English', serif; font-size: 1rem; color: var(--accent); margin: 0.4rem 0 1rem; }
+
+/* ════════════════════════════
+   ANIMATIONS
+════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ════════════════════════════
+   RESPONSIVE
+════════════════════════════ */
+/* ════════════════════════════
+   Hamburger（預設隱藏，手機才顯示）
+════════════════════════════ */
+.hamburger {
+  display: none;
+  flex-direction: column; justify-content: center; align-items: center;
+  gap: 5px; width: 44px; height: 44px;
+  background: none;
+  border: 1px solid rgba(114,87,82,0.2);
+  border-radius: 2px;
+  cursor: pointer; padding: 0; flex-shrink: 0;
+}
+.hamburger span {
+  display: block; width: 20px; height: 2px;
+  background: var(--primary); border-radius: 2px;
+}
+.hamburger.open {
+  background: var(--cream);
+  border-color: var(--primary);
+}
+
+/* ════════════════════════════
+   手機展開選單（預設隱藏）
+════════════════════════════ */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 64px; left: 0; right: 0;
+  background: rgba(250,246,241,0.98);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(114,87,82,0.15);
+  z-index: 199;
+  flex-direction: column;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  font-family: 'Noto Serif TC', serif; font-size: 0.92rem;
+  color: var(--dark); text-decoration: none;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid rgba(114,87,82,0.08);
+  transition: background 0.15s, color 0.15s;
+}
+.mobile-menu a:last-child { border-bottom: none; }
+.mobile-menu a:hover { background: var(--cream); color: var(--primary); }
+
+@media (max-width: 960px) {
+  /* Nav */
+  nav { padding: 0 16px; }
+  .nav-links { display: none; }
+  .nav-ig    { display: none; }
+  .nav-btn-text { display: none; }
+
+  /* lookup-trigger：手機版移入 Hamburger 選單，Nav 隱藏 */
+  .lookup-trigger { display: none !important; }
+
+  /* cart-btn：44px icon only */
+  .cart-btn {
+    width: 44px; height: 44px; min-width: 44px;
+    padding: 0; justify-content: center;
+    position: relative;
+  }
+  .cart-btn svg { width: 22px; height: 22px; }
+  .cart-count {
+    position: absolute; top: 4px; right: 4px;
+    font-size: 9px; min-width: 14px; height: auto; padding: 0 3px;
+  }
+
+  /* Hamburger */
+  .hamburger { display: flex; }
+
+  /* Hero：圖片顯示在上方 */
+  .hero { grid-template-columns: 1fr; }
+  .hero-right {
+    display: block;
+    height: 280px;
+    order: -1;
+  }
+  .hero-img-wrap { height: 100%; }
+  .hero-cover-img { width: 100%; height: 100%; object-fit: cover; }
+  .hero-img-overlay { display: none; }
+  .hero-left { padding: 2rem 1.5rem; }
+  .hero-deco { display: none; }
+
+  /* 其他 */
+  .products-grid { grid-template-columns: 1fr; }
+  .product-card--featured { grid-template-columns: 1fr; }
+  .philosophy-grid { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr; }
+  .form-row2 { grid-template-columns: 1fr; }
+}
+
+/* ════════════════════════════
+   步驟 3：末五碼 & 稍後補填
+════════════════════════════ */
+
+/* 當場填末五碼區塊 */
+.bank-code-section {
+  background: var(--cream);
+  border: 1.5px solid var(--accent);
+  padding: 1.4rem;
+  margin-bottom: 0;
+}
+.bank-code-title {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: 'Shippori Mincho', serif;
+  font-size: 0.9rem; font-weight: 600;
+  color: var(--primary); margin-bottom: 1rem;
+}
+
+/* 分隔線 */
+.later-divider {
+  display: flex; align-items: center; gap: 0.8rem;
+  margin: 1.2rem 0;
+}
+.later-divider::before,
+.later-divider::after {
+  content: ''; flex: 1;
+  height: 1px; background: rgba(227,181,164,0.4);
+}
+.later-divider span {
+  font-size: 0.75rem; color: var(--light-text);
+  letter-spacing: 0.1em; white-space: nowrap;
+}
+
+/* 稍後補填區塊 */
+.later-section { margin-bottom: 1.2rem; }
+.later-box { text-align: center; }
+
+/* 訂單編號展示框 */
+.order-ref-box {
+  display: inline-flex; align-items: center; gap: 0.7rem;
+  background: var(--white); border: 1px solid rgba(114,87,82,0.2);
+  padding: 0.6rem 1rem; margin-bottom: 1rem;
+}
+.order-ref-label {
+  font-size: 0.72rem; color: var(--light-text); white-space: nowrap;
+}
+.order-ref-no {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 1rem; color: var(--primary); font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+/* 稍後補填按鈕 */
+.btn-later {
+  width: 100%; background: transparent;
+  border: 1.5px solid rgba(114,87,82,0.28);
+  color: var(--mid); padding: 0.75rem;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 0.82rem; letter-spacing: 0.08em;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-later:hover { border-color: var(--primary); color: var(--primary); }
+
+/* ════════════════════════════
+   訂單查詢 Modal
+════════════════════════════ */
+.lookup-overlay {
+  position: fixed; inset: 0;
+  background: rgba(30,15,10,0.55);
+  z-index: 400; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+  display: flex; align-items: center; justify-content: center; padding: 1rem;
+}
+.lookup-overlay.open { opacity: 1; pointer-events: all; }
+
+.lookup-modal {
+  background: var(--white); width: 100%; max-width: 480px;
+  max-height: 90vh; overflow-y: auto;
+  transform: translateY(20px); transition: transform 0.3s;
+}
+.lookup-overlay.open .lookup-modal { transform: translateY(0); }
+
+.lookup-hdr {
+  padding: 1.4rem 2rem 1rem;
+  border-bottom: 1px solid rgba(227,181,164,0.3);
+  position: sticky; top: 0; background: var(--white); z-index: 1;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.lookup-hdr h2 {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 1rem; color: var(--primary);
+}
+.lookup-close {
+  background: none; border: none; cursor: pointer;
+  color: var(--mid); font-size: 1.4rem; line-height: 1;
+}
+.lookup-close:hover { color: var(--primary); }
+.lookup-body { padding: 1.8rem; }
+
+/* ════════════════════════════
+   訂單查詢觸發按鈕（Nav 或頁尾）
+════════════════════════════ */
+.lookup-trigger {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  font-size: 0.78rem; color: var(--mid);
+  text-decoration: none; cursor: pointer;
+  background: none; border: none;
+  font-family: 'Noto Serif TC', serif;
+  letter-spacing: 0.06em; transition: color 0.2s;
+  padding: 0;
+}
+.lookup-trigger:hover { color: var(--primary); }
+
+/* ════════════════════════════
+   Hero 真實圖片
+════════════════════════════ */
+.hero-cover-img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  display: block;
+}
+.hero-img-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, var(--warm-bg) 0%, transparent 20%),
+              linear-gradient(to bottom, transparent 70%, var(--warm-bg) 100%);
+}
+
+/* ════════════════════════════
+   商品真實照片
+════════════════════════════ */
+.product-photo {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  display: block; transition: transform 0.4s ease;
+}
+.product-card:hover .product-photo {
+  transform: scale(1.04);
+}
+
+/* ════════════════════════════
+   注意事項區塊
+════════════════════════════ */
+.notice-block {
+  max-width: 1100px; margin: 0 auto 2.5rem;
+  padding: 0 2rem;
+}
+.notice-title {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: 'Shippori Mincho', serif;
+  font-size: 0.92rem; font-weight: 600;
+  color: var(--primary); margin-bottom: 0.9rem;
+}
+.notice-list {
+  list-style: none;
+  background: var(--cream);
+  border-left: 3px solid var(--accent);
+  padding: 1.2rem 1.5rem;
+  display: flex; flex-direction: column; gap: 0.55rem;
+}
+.notice-list li {
+  font-size: 0.85rem; color: var(--mid);
+  line-height: 1.8; padding-left: 1.2rem; position: relative;
+}
+.notice-list li::before {
+  content: '·'; position: absolute; left: 0;
+  color: var(--accent); font-size: 1.2rem; line-height: 1.4;
+}
+.notice-list li strong { color: var(--primary); }
+.notice-link {
+  color: var(--primary); text-decoration: underline;
+  text-underline-offset: 3px; cursor: pointer; font-weight: 600;
+}
+.notice-link:hover { color: var(--accent); }
+
+/* ════════════════════════════
+   7-11 查詢連結
+════════════════════════════ */
+.seven-lookup-link {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  font-size: 0.75rem; color: var(--primary);
+  text-decoration: underline; text-underline-offset: 2px;
+  margin-top: 0.35rem; cursor: pointer;
+  font-family: 'Noto Serif TC', serif;
+}
+.seven-lookup-link:hover { color: var(--light-text); }
+
+/* ════════════════════════════
+   Footer 社群連結
+════════════════════════════ */
+.footer-social {
+  display: flex; flex-direction: column; gap: 0.7rem;
+  margin-top: 1.1rem;
+}
+.footer-social-link {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  color: var(--light-text); text-decoration: none;
+  font-size: 0.82rem; transition: opacity 0.2s;
+}
+.footer-social-link:hover { opacity: 0.75; }
+
+/* ════════════════════════════
+   步驟 3：末五碼 & 稍後補填
+════════════════════════════ */
+.bank-code-section {
+  background: var(--cream); border: 1.5px solid var(--accent);
+  padding: 1.4rem; margin-bottom: 0;
+}
+.bank-code-title {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: 'Shippori Mincho', serif; font-size: 0.9rem;
+  font-weight: 600; color: var(--primary); margin-bottom: 1rem;
+}
+.later-divider {
+  display: flex; align-items: center; gap: 0.8rem; margin: 1.2rem 0;
+}
+.later-divider::before, .later-divider::after {
+  content: ''; flex: 1; height: 1px; background: rgba(227,181,164,0.4);
+}
+.later-divider span { font-size: 0.75rem; color: var(--light-text); letter-spacing: 0.1em; }
+.later-section { margin-bottom: 1.2rem; }
+.later-box { text-align: center; }
+.order-ref-box {
+  display: inline-flex; align-items: center; gap: 0.7rem;
+  background: var(--white); border: 1px solid rgba(114,87,82,0.2);
+  padding: 0.6rem 1rem; margin-bottom: 1rem;
+}
+.order-ref-label { font-size: 0.72rem; color: var(--light-text); white-space: nowrap; }
+.order-ref-no {
+  font-family: 'Shippori Mincho', serif; font-size: 1rem;
+  color: var(--primary); font-weight: 600; letter-spacing: 0.08em;
+}
+.btn-later {
+  width: 100%; background: transparent;
+  border: 1.5px solid rgba(114,87,82,0.28); color: var(--mid);
+  padding: 0.75rem; font-family: 'Noto Serif TC', serif;
+  font-size: 0.82rem; letter-spacing: 0.08em; cursor: pointer; transition: all 0.2s;
+}
+.btn-later:hover { border-color: var(--primary); color: var(--primary); }
+
+/* ════════════════════════════
+   訂單查詢 Modal
+════════════════════════════ */
+.lookup-overlay {
+  position: fixed; inset: 0; background: rgba(30,15,10,0.55);
+  z-index: 400; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  display: flex; align-items: center; justify-content: center; padding: 1rem;
+}
+.lookup-overlay.open { opacity: 1; pointer-events: all; }
+.lookup-modal {
+  background: var(--white); width: 100%; max-width: 480px;
+  max-height: 90vh; overflow-y: auto;
+  transform: translateY(20px); transition: transform 0.3s;
+}
+.lookup-overlay.open .lookup-modal { transform: translateY(0); }
+.lookup-hdr {
+  padding: 1.4rem 2rem 1rem; border-bottom: 1px solid rgba(227,181,164,0.3);
+  position: sticky; top: 0; background: var(--white); z-index: 1;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.lookup-hdr h2 { font-family: 'Shippori Mincho', serif; font-size: 1rem; color: var(--primary); }
+.lookup-close { background: none; border: none; cursor: pointer; color: var(--mid); font-size: 1.4rem; }
+.lookup-close:hover { color: var(--primary); }
+.lookup-body { padding: 1.8rem; }
+
+@media (max-width: 960px) {
+  .notice-block { padding: 0 1rem; }
+}
+
+/* ════════════════════════════
+   SVG NEW Badge
+════════════════════════════ */
+.product-badge--new {
+  position: absolute; top: 0.8rem; right: 0.8rem;
+  background: none; padding: 0;
+  width: 44px; height: 44px;
+  filter: drop-shadow(0 2px 6px rgba(114,87,82,0.35));
+  animation: badgePulse 2.5s ease-in-out infinite;
+}
+.product-badge--new svg {
+  width: 44px; height: 44px;
+}
+
+@keyframes badgePulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 2px 6px rgba(114,87,82,0.35)); }
+  50%       { transform: scale(1.08); filter: drop-shadow(0 3px 10px rgba(114,87,82,0.5)); }
+}
+
+/* ════════════════════════════
+   購物車商品縮圖（真實圖片）
+════════════════════════════ */
+.cart-item-thumb {
+  width: 60px; height: 60px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--cream);
+  display: flex; align-items: center; justify-content: center;
+}
+.cart-item-img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  display: block;
+}
+.cart-item-emoji { font-size: 1.8rem; }
+.cart-item-info  { flex: 1; min-width: 0; }
+
+/* ════════════════════════════
+   社群聯繫欄位
+════════════════════════════ */
+.social-row {
+  margin-bottom: 0.7rem;
+}
+.social-check {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-size: 0.85rem; color: var(--mid);
+  cursor: pointer; padding: 0.4rem 0;
+  user-select: none; transition: color 0.2s;
+}
+.social-check input[type="checkbox"] {
+  width: 16px; height: 16px;
+  accent-color: var(--primary); cursor: pointer; flex-shrink: 0;
+}
+.social-check.checked { color: var(--primary); font-weight: 600; }
+.social-check svg { flex-shrink: 0; color: var(--mid); }
+.social-check.checked svg { color: var(--primary); }
+
+.social-input-wrap {
+  display: flex; align-items: center; gap: 0;
+  margin-top: 0.35rem; margin-left: 1.6rem;
+}
+.social-prefix {
+  background: var(--cream); border: 1px solid rgba(114,87,82,0.25);
+  border-right: none; padding: 0.65rem 0.7rem;
+  font-size: 0.88rem; color: var(--mid);
+  font-family: 'Noto Serif TC', serif; flex-shrink: 0;
+}
+.social-input {
+  border-radius: 0 !important;
+  flex: 1;
+}
+
+/* ════════════════════════════
+   Nav Logo 圖片
+════════════════════════════ */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.nav-logo-img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  border: 1.5px solid rgba(114,87,82,0.18);
+  flex-shrink: 0;
+}
+.nav-logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.nav-logo-text span {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.82rem;
+  color: var(--mid);
+  letter-spacing: 0.15em;
+}
+
+/* ════════════════════════════
+   庫存狀態
+════════════════════════════ */
+/* 售完 / 低庫存標示 */
+.stock-badge {
+  position: absolute; bottom: 0.8rem; left: 0.8rem;
+  font-size: 0.72rem; font-family: 'Noto Serif TC', serif;
+  padding: 0.25rem 0.65rem; letter-spacing: 0.08em;
+  font-weight: 600; pointer-events: none;
+}
+.stock-badge--out {
+  background: rgba(58,44,40,0.82); color: #FFFDF9;
+}
+.stock-badge--low {
+  background: rgba(192,103,90,0.9); color: #fff;
+  animation: stockPulse 1.8s ease-in-out infinite;
+}
+@keyframes stockPulse {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.75; }
+}
+
+/* 售完商品卡片變暗 */
+.product-card--soldout { opacity: 0.7; }
+.product-card--soldout .product-photo { filter: grayscale(30%); }
+
+/* 售完按鈕 */
+.add-to-cart--soldout {
+  background: rgba(114,87,82,0.1) !important;
+  border-color: rgba(114,87,82,0.2) !important;
+  color: var(--light-text) !important;
+  cursor: not-allowed !important;
+  font-style: italic;
+}
+
+/* ════════════════════════════
+   購物車商品列（緊湊版）
+════════════════════════════ */
+.cart-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid rgba(227,181,164,0.2);
+  gap: 0.8rem;
+}
+.cart-item-info {
+  flex: 1;
+  min-width: 0;
+}
+.cart-item-name {
+  font-size: 0.84rem;
+  color: var(--dark);
+  font-family: 'Noto Serif TC', serif;
+  margin-bottom: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cart-item-price {
+  font-size: 0.75rem;
+  color: var(--light-text);
+}
+.cart-item-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+.cart-item-subtotal {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary);
+  min-width: 44px;
+  text-align: right;
+}
+
+/* ════════════════════════════
+   購物車商品庫存提示
+════════════════════════════ */
+.cart-stock-hint {
+  font-size: 0.72rem;
+  font-family: 'Noto Serif TC', serif;
+  margin-top: 0.25rem;
+  letter-spacing: 0.05em;
+}
+.cart-stock-hint--low {
+  color: #c0675a;
+  font-weight: 600;
+}
+.cart-stock-hint--out {
+  color: #9B7B72;
+  font-style: italic;
+}
+
+
+/* ════════════════════════════
+   Products Loading
+════════════════════════════ */
+.products-loading {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1.2rem;
+  color: var(--mid);
+  font-family: 'Noto Serif TC', serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+}
+.products-loading-spinner {
+  width: 36px; height: 36px;
+  border: 2px solid rgba(114,87,82,0.15);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
