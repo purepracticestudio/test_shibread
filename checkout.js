@@ -227,7 +227,7 @@ function renderCheckoutStep() {
         <h4>📦 訂單明細</h4>
         ${cart.map(i => `
           <div class="sum-item">
-            <span>${i.emoji} ${i.name} × ${i.qty}</span>
+           <span>${i.name} × ${i.qty}</span>
             <strong>$${i.price * i.qty}</strong>
           </div>`).join('')}
         <hr class="sum-div">
