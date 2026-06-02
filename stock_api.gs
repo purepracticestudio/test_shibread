@@ -1,9 +1,9 @@
 // ═══════════════════════════════════════════════════════
 //  食麵包 Traveler Bread — Google Apps Script
-//  v2.0  2026-06  新增 action=products 動態商品端點
+//  v3.0  2026-06  新增 action=products 動態商品端點
 // ═══════════════════════════════════════════════════════
 
-var SPREADSHEET_ID  = '1TVZW3beibiSJuvQIu451_w7RAABDtsQTvauuv6L7yp4';
+var SPREADSHEET_ID  = '1-1w0nO8FZQfbBoRt8Fqq2t5LD2cY1_zUY1W2Z09q5ug';
 var PRODUCT_SHEET_ID = '1-1w0nO8FZQfbBoRt8Fqq2t5LD2cY1_zUY1W2Z09q5ug'; // 預定商品工作表所在的 Spreadsheet
 var ORDER_SHEET     = '訂單資料';
 var STOCK_SHEET     = '庫存';
@@ -100,9 +100,9 @@ function getProducts() {
     var data = sheet.getDataRange().getValues();
 
     // 取得出貨日（B 欄，第一筆非空的資料列）
-    // 第 1、2 列為標題列，從第 3 列（i=2）起是資料
+    // 第 1 列為標題列，從第 2 列（i=1）起是資料
     var deliveryDate = '';
-    for (var i = 2; i < data.length; i++) {
+    for (var i = 1; i < data.length; i++) {
       var bVal = String(data[i][1] || '').trim();
       if (bVal !== '') {
         // 若是 Date 物件自動轉換
@@ -116,7 +116,7 @@ function getProducts() {
 
     var products = [];
 
-    for (var i = 2; i < data.length; i++) {
+    for (var i = 1; i < data.length; i++) {
       var row = data[i];
 
       // 欄位對應（0-index）：
@@ -274,8 +274,9 @@ function doPost(e) {
     if (type === 'bankcode_update') {
       sendOwnerPaymentEmail(body);
       updateBankCode(body);
-      deductStock(body);
-      Logger.log('付款通知已寄出，末五碼已更新，庫存已扣除');
+      deductStock(body);             // D 欄已售出 +qty
+      releasePreDeductOnPayment(body); // F 欄預扣 -qty
+      Logger.log('付款通知已寄出，末五碼已更新，庫存已扣除，預扣已釋出');
     }
 
     return ContentService
@@ -291,7 +292,9 @@ function doPost(e) {
 }
 
 // ════════════════════════════
-//  下單時寫入 Sheets（末五碼欄位留空）
+//  下單時寫入 Sheets + 預扣庫存
+//  欄位：A訂單日期 B訂單編號 C姓名 D電話 E Email
+//        F社群 G取貨 H商品 I總金額 J末五碼 K備註 L預扣狀態
 // ════════════════════════════
 function recordNewOrder(d) {
   var ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
@@ -299,29 +302,75 @@ function recordNewOrder(d) {
   var now   = Utilities.formatDate(new Date(), 'Asia/Taipei', 'yyyy-MM-dd HH:mm') + '';
   var phone = d.phone ? ("'" + d.phone) : '';
   sheet.appendRow([
-    now,
-    d.orderNo  || '',
-    d.name     || '',
-    phone,
-    d.email    || '',
-    d.social   || '',
-    d.ship     || '',
-    d.cart     || '',
-    d.total    || '',
-    '',
-    d.note     || '',
+    now,           // A 訂單日期
+    d.orderNo  || '', // B 訂單編號
+    d.name     || '', // C 姓名
+    phone,            // D 電話
+    d.email    || '', // E Email
+    d.social   || '', // F 社群帳號
+    d.ship     || '', // G 取貨方式
+    d.cart     || '', // H 商品
+    d.total    || '', // I 總金額
+    '',               // J 末五碼（留空）
+    d.note     || '', // K 備註
+    '預扣',           // L 預扣狀態
   ]);
+
+  // 預扣庫存：寫入庫存工作表 F 欄
+  preDeductStock(d);
+}
+
+// ════════════════════════════
+//  預扣庫存（下單時）
+//  庫存工作表 F 欄：預扣數量
+// ════════════════════════════
+function preDeductStock(d) {
+  var stockSheet   = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(STOCK_SHEET);
+  var stockData    = stockSheet.getDataRange().getValues();
+  var productSheet = SpreadsheetApp.openById(PRODUCT_SHEET_ID).getSheetByName(PRODUCT_SHEET);
+  var productData  = productSheet.getDataRange().getValues();
+  var cart         = d.cart || '';
+
+  // 建立「商品名稱 → 商品ID」對應表
+  var productMap = {};
+  for (var i = 1; i < productData.length; i++) {
+    var pId   = (productData[i][3] === 0 || productData[i][3]) ? String(productData[i][3]).trim() : '';
+    var pName = String(productData[i][4] || '').trim();
+    if (pName !== '' && pId !== '') productMap[pName] = pId;
+  }
+
+  // 比對購物車，預扣 F 欄數量
+  var names = Object.keys(productMap);
+  for (var n = 0; n < names.length; n++) {
+    var name  = names[n];
+    var regex = new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ' x(\\d+)');
+    var match = cart.match(regex);
+    if (match) {
+      var qty = parseInt(match[1]);
+      var pid = productMap[name];
+      for (var i = 1; i < stockData.length; i++) {
+        if (String(stockData[i][0]) === pid) {
+          var currentPre = Number(stockSheet.getRange(i + 1, 6).getValue()) || 0;
+          stockSheet.getRange(i + 1, 6).setValue(currentPre + qty);
+          Logger.log('預扣庫存：' + name + ' x' + qty + '（ID: ' + pid + '）');
+          break;
+        }
+      }
+    }
+  }
 }
 
 // ════════════════════════════
 //  補填末五碼後更新 Sheets 該列
+//  J 欄寫入末五碼，L 欄改為「已付款」
 // ════════════════════════════
 function updateBankCode(d) {
   var sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(ORDER_SHEET);
   var data  = sheet.getDataRange().getValues();
   for (var i = 1; i < data.length; i++) {
     if (String(data[i][1]).toUpperCase() === String(d.orderNo).toUpperCase()) {
-      sheet.getRange(i + 1, 10).setValue(d.bankCode || '');
+      sheet.getRange(i + 1, 10).setValue(d.bankCode || ''); // J 欄：末五碼
+      sheet.getRange(i + 1, 12).setValue('已付款');          // L 欄：預扣狀態
       Logger.log('末五碼已更新：' + d.orderNo);
       return;
     }
@@ -342,10 +391,10 @@ function deductStock(body) {
   var cart         = body.cart || '';
 
   // 動態建立「商品名稱（E欄） → 商品ID（D欄）」對應表
-  // 第 1、2 列為標題列，從第 3 列（i=2）起是資料
+  // 第 1 列為標題列，從第 2 列（i=1）起是資料
   var productMap = {};
-  for (var i = 2; i < productData.length; i++) {
-    var pId   = String(productData[i][3] || '').trim(); // D 欄：商品ID
+  for (var i = 1; i < productData.length; i++) {
+    var pId   = (productData[i][3] === 0 || productData[i][3]) ? String(productData[i][3]).trim() : '';// D 欄：數量
     var pName = String(productData[i][4] || '').trim(); // E 欄：商品名稱
     if (pName !== '' && pId !== '') {
       productMap[pName] = pId;
@@ -479,4 +528,130 @@ function resetStocks() {
     if (data[i][0] !== '') sheet.getRange(i + 1, 4).setValue(0);
   }
   Logger.log('庫存已重置完畢');
+}
+
+// ════════════════════════════
+//  付款確認後：D 欄已售出 +qty，F 欄預扣 -qty
+//  原 deductStock 已處理 D 欄，這裡補充釋出 F 欄預扣
+// ════════════════════════════
+function releasePreDeductOnPayment(body) {
+  var stockSheet   = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(STOCK_SHEET);
+  var stockData    = stockSheet.getDataRange().getValues();
+  var productSheet = SpreadsheetApp.openById(PRODUCT_SHEET_ID).getSheetByName(PRODUCT_SHEET);
+  var productData  = productSheet.getDataRange().getValues();
+  var cart         = body.cart || '';
+
+  var productMap = {};
+  for (var i = 1; i < productData.length; i++) {
+    var pId   = (productData[i][3] === 0 || productData[i][3]) ? String(productData[i][3]).trim() : '';
+    var pName = String(productData[i][4] || '').trim();
+    if (pName !== '' && pId !== '') productMap[pName] = pId;
+  }
+
+  var names = Object.keys(productMap);
+  for (var n = 0; n < names.length; n++) {
+    var name  = names[n];
+    var regex = new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ' x(\\d+)');
+    var match = cart.match(regex);
+    if (match) {
+      var qty = parseInt(match[1]);
+      var pid = productMap[name];
+      for (var i = 1; i < stockData.length; i++) {
+        if (String(stockData[i][0]) === pid) {
+          var currentPre = Number(stockSheet.getRange(i + 1, 6).getValue()) || 0;
+          var newPre = Math.max(0, currentPre - qty);
+          stockSheet.getRange(i + 1, 6).setValue(newPre); // F 欄預扣 -qty
+          Logger.log('釋出預扣：' + name + ' x' + qty + '（ID: ' + pid + '）');
+          break;
+        }
+      }
+    }
+  }
+}
+
+// ════════════════════════════
+//  定時觸發：釋出過期預扣庫存（每小時執行）
+//  掃描 L 欄為「預扣」且超過 48 小時的訂單
+//  → F 欄預扣數量歸零，L 欄改為「已釋出」
+// ════════════════════════════
+function releaseExpiredStock() {
+  var ss         = SpreadsheetApp.openById(SPREADSHEET_ID);
+  var orderSheet = ss.getSheetByName(ORDER_SHEET);
+  var stockSheet = ss.getSheetByName(STOCK_SHEET);
+  var productSheet = SpreadsheetApp.openById(PRODUCT_SHEET_ID).getSheetByName(PRODUCT_SHEET);
+  var orderData  = orderSheet.getDataRange().getValues();
+  var stockData  = stockSheet.getDataRange().getValues();
+  var productData = productSheet.getDataRange().getValues();
+
+  var now        = new Date();
+  // var limit = 5 * 60 * 1000; // 測試用：5 分鐘
+  var limit      = 48 * 60 * 60 * 1000; //48 小時毫秒數
+
+  // 建立「商品名稱 → 商品ID」對應表
+  var productMap = {};
+  for (var i = 1; i < productData.length; i++) {
+    var pId   = (productData[i][3] === 0 || productData[i][3]) ? String(productData[i][3]).trim() : '';
+    var pName = String(productData[i][4] || '').trim();
+    if (pName !== '' && pId !== '') productMap[pName] = pId;
+  }
+
+  for (var i = 1; i < orderData.length; i++) {
+    var row    = orderData[i];
+    var status = String(row[11] || '').trim(); // L 欄：預扣狀態
+
+    if (status !== '預扣') continue;
+
+    // A 欄訂單日期
+    var orderDate = new Date(String(row[0]));
+    if (isNaN(orderDate.getTime())) continue;
+
+    var elapsed = now - orderDate;
+    if (elapsed < limit) continue; // 未超過 48 小時
+
+    // 超過 48 小時 → 釋出 F 欄預扣數量
+    var cart = String(row[7] || ''); // H 欄：商品
+    var names = Object.keys(productMap);
+    for (var n = 0; n < names.length; n++) {
+      var name  = names[n];
+      var regex = new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ' x(\\d+)');
+      var match = cart.match(regex);
+      if (match) {
+        var qty = parseInt(match[1]);
+        var pid = productMap[name];
+        for (var j = 1; j < stockData.length; j++) {
+          if (String(stockData[j][0]) === pid) {
+            var currentPre = Number(stockSheet.getRange(j + 1, 6).getValue()) || 0;
+            var newPre = Math.max(0, currentPre - qty);
+            stockSheet.getRange(j + 1, 6).setValue(newPre);
+            Logger.log('過期釋出：' + name + ' x' + qty + '（訂單：' + row[1] + '）');
+            break;
+          }
+        }
+      }
+    }
+
+    // L 欄改為「已釋出」
+    orderSheet.getRange(i + 1, 12).setValue('已釋出');
+    Logger.log('訂單已釋出：' + row[1]);
+  }
+}
+
+// ════════════════════════════
+//  設定定時觸發器（手動執行一次即可）
+//  每小時自動執行 releaseExpiredStock
+// ════════════════════════════
+function createTimeTrigger() {
+  // 避免重複建立
+  var triggers = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < triggers.length; i++) {
+    if (triggers[i].getHandlerFunction() === 'releaseExpiredStock') {
+      Logger.log('觸發器已存在，不重複建立');
+      return;
+    }
+  }
+  ScriptApp.newTrigger('releaseExpiredStock')
+    .timeBased()
+    .everyHours(1)
+    .create();
+  Logger.log('定時觸發器已建立，每小時執行一次');
 }
