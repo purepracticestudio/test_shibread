@@ -1,7 +1,6 @@
 // ═══════════════════════════════════════════════════════
 //  食麵包 Traveler Bread — Google Apps Script
-//  v3.0  2026-06  新增 action=products 動態商品端點
-此版本為 48小時未寄信前
+//  v４.0  2026-06  新增 action=products 動態商品端點
 // ═══════════════════════════════════════════════════════
 
 var SPREADSHEET_ID  = '1-1w0nO8FZQfbBoRt8Fqq2t5LD2cY1_zUY1W2Z09q5ug';
@@ -235,18 +234,19 @@ function queryOrder(orderNo, contact) {
       }
 
       return {
-        success:  true,
-        orderNo:  String(row[1]),
-        date:     String(row[0]),
-        name:     String(row[2]),
-        phone:    String(row[3]).replace(/^'+/, ''),
-        email:    String(row[4]),
-        social:   String(row[5]),
-        ship:     String(row[6]),
-        cart:     String(row[7]),
-        total:    String(row[8]),
-        bankCode: String(row[9]),
-        note:     String(row[10]),
+        success:      true,
+        orderNo:      String(row[1]),
+        date:         String(row[0]),
+        name:         String(row[2]),
+        phone:        String(row[3]).replace(/^'+/, ''),
+        email:        String(row[4]),
+        social:       String(row[5]),
+        ship:         String(row[6]),
+        cart:         String(row[7]),
+        total:        String(row[8]),
+        bankCode:     String(row[9]),
+        note:         String(row[10]),
+        orderStatus:  String(row[11] || ''),  // L 欄：預扣狀態
       };
     }
     return { success: false, error: '找不到此訂單，請確認訂單編號是否正確' };
@@ -395,7 +395,7 @@ function deductStock(body) {
   // 第 1 列為標題列，從第 2 列（i=1）起是資料
   var productMap = {};
   for (var i = 1; i < productData.length; i++) {
-    var pId   = (productData[i][3] === 0 || productData[i][3]) ? String(productData[i][3]).trim() : '';// D 欄：數量
+    var pId   = String(productData[i][3] || '').trim(); // D 欄：商品ID
     var pName = String(productData[i][4] || '').trim(); // E 欄：商品名稱
     if (pName !== '' && pId !== '') {
       productMap[pName] = pId;
@@ -446,7 +446,7 @@ function sendCustomerConfirmEmail(d) {
     '<div style="background:#F5EDE3;padding:12px 16px;margin-top:16px;border-left:3px solid #E3B5A4">' +
     '<p style="margin:0;color:#725752">請於 <b>48 小時內</b> 完成匯款，若在時間內未完成匯款，訂單會被取消，請留意!</p>' +
     '<ul style="margin:8px 0 0;color:#9B7B72;font-size:13px;padding-left:1.2rem;line-height:2">' +
-    '<li style="color:#C45131">匯款資訊：星展銀行(810)，帳號3125838019</li>' +
+    '<li style="color:#C45131">匯款資訊：星展銀行（810），帳號3125838019</li>' +
     '<li>匯款後請複製訂單編號，回到食麵包官網補填末五碼，確認後我們會以 Email 或社群帳號通知出貨時間。</li>' +
     '<li>若需要更改或取消訂單，請到食麵包 官方Line @shibread 私訊，謝謝。</li>' +
     '</ul>' +
@@ -585,8 +585,8 @@ function releaseExpiredStock() {
   var productData = productSheet.getDataRange().getValues();
 
   var now        = new Date();
-  // var limit = 5 * 60 * 1000; // 測試用：5 分鐘
-  var limit      = 48 * 60 * 60 * 1000; //48 小時毫秒數
+   var limit      = 48 * 60 * 60 * 1000; // 48 小時毫秒數
+  // var limit = 1 * 60 * 1000; // 測試用：1 分鐘
 
   // 建立「商品名稱 → 商品ID」對應表
   var productMap = {};
@@ -634,6 +634,68 @@ function releaseExpiredStock() {
     // L 欄改為「已釋出」
     orderSheet.getRange(i + 1, 12).setValue('已釋出');
     Logger.log('訂單已釋出：' + row[1]);
+
+    // 寄信通知客戶與業者
+    sendExpiredOrderEmail({
+      orderNo: String(row[1]),
+      name:    String(row[2]),
+      email:   String(row[4]),
+      cart:    String(row[7]),
+      total:   String(row[8]),
+    });
+  }
+}
+
+// ════════════════════════════
+//  寄逾期取消通知（客戶 + 業者）
+// ════════════════════════════
+function sendExpiredOrderEmail(d) {
+  var subject = '食麵包 訂單逾期取消通知 — ' + d.orderNo;
+  var html =
+    '<div style="font-family:sans-serif;max-width:500px;margin:0 auto;color:#3A2C28">' +
+    '<h2 style="color:#725752;border-bottom:2px solid #E3B5A4;padding-bottom:8px">訂單逾期取消通知</h2>' +
+    '<p style="color:#9B7B72;line-height:2">親愛的 ' + d.name + ' 您好，</p>' +
+    '<p style="color:#9B7B72;line-height:2">您的訂單因超過 48 小時未完成匯款，已自動取消，庫存已釋出。</p>' +
+    '<table style="width:100%;border-collapse:collapse;margin:1rem 0">' +
+    row('訂單編號', '<b>' + d.orderNo + '</b>') +
+    row('商品',     d.cart) +
+    row('總金額',   '$' + d.total) +
+    '</table>' +
+    '<div style="background:#F5EDE3;padding:12px 16px;margin-top:16px;border-left:3px solid #E3B5A4;line-height:2;color:#9B7B72;font-size:0.9rem">' +
+    '若您還需要購買，歡迎回到官網重新訂購：<br>' +
+    '<a href="https://www.shibread.com/" style="color:#725752">食麵包 Traveler Bread</a><br>' +
+    '若有其他問題，請到官方 Line <b>@shibread</b> 私訊，謝謝。' +
+    '</div>' +
+    '</div>';
+
+  // 寄給客戶
+  try {
+    GmailApp.sendEmail(d.email, subject, '', { htmlBody: html });
+    Logger.log('逾期通知已寄給客戶：' + d.email);
+  } catch(e) {
+    Logger.log('寄信給客戶失敗：' + e.message);
+  }
+
+  // 寄給業者
+  var ownerSubject = '訂單逾期自動取消 — ' + d.orderNo;
+  var ownerHtml =
+    '<div style="font-family:sans-serif;max-width:500px;margin:0 auto;color:#3A2C28">' +
+    '<h2 style="color:#725752;border-bottom:2px solid #E3B5A4;padding-bottom:8px">訂單逾期自動取消</h2>' +
+    '<p style="color:#9B7B72;line-height:2">以下訂單因超過 48 小時未付款，已自動取消並釋出庫存。</p>' +
+    '<table style="width:100%;border-collapse:collapse">' +
+    row('訂單編號', '<b>' + d.orderNo + '</b>') +
+    row('客戶姓名', d.name) +
+    row('Email',   d.email) +
+    row('商品',     d.cart) +
+    row('總金額',   '$' + d.total) +
+    '</table>' +
+    '</div>';
+
+  try {
+    GmailApp.sendEmail(OWNER_EMAILS, ownerSubject, '', { htmlBody: ownerHtml });
+    Logger.log('逾期通知已寄給業者');
+  } catch(e) {
+    Logger.log('寄信給業者失敗：' + e.message);
   }
 }
 
