@@ -1,6 +1,7 @@
 // ═══════════════════════════════════════════════════════
 //  食麵包 Traveler Bread — Google Apps Script
 //  v3.0  2026-06  新增 action=products 動態商品端點
+此版本為 48小時未寄信前
 // ═══════════════════════════════════════════════════════
 
 var SPREADSHEET_ID  = '1-1w0nO8FZQfbBoRt8Fqq2t5LD2cY1_zUY1W2Z09q5ug';
@@ -443,9 +444,9 @@ function sendCustomerConfirmEmail(d) {
     row('總金額',   '<b style="color:#725752">$' + d.total + '</b>') +
     '</table>' +
     '<div style="background:#F5EDE3;padding:12px 16px;margin-top:16px;border-left:3px solid #E3B5A4">' +
-    '<p style="margin:0;color:#725752">請於 <b>48 小時內</b> 完成匯款</p>' +
+    '<p style="margin:0;color:#725752">請於 <b>48 小時內</b> 完成匯款，若在時間內未完成匯款，訂單會被取消，請留意!</p>' +
     '<ul style="margin:8px 0 0;color:#9B7B72;font-size:13px;padding-left:1.2rem;line-height:2">' +
-    '<li style="color:#C45131">匯款資訊：星展銀行（810），帳號3125838019</li>' +
+    '<li style="color:#C45131">匯款資訊：星展銀行(810)，帳號3125838019</li>' +
     '<li>匯款後請複製訂單編號，回到食麵包官網補填末五碼，確認後我們會以 Email 或社群帳號通知出貨時間。</li>' +
     '<li>若需要更改或取消訂單，請到食麵包 官方Line @shibread 私訊，謝謝。</li>' +
     '</ul>' +

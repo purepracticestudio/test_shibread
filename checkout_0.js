@@ -439,42 +439,9 @@ function renderLookupStep(step) {
     return;
   }
 
-  // ── 找到訂單：區分已付款 / 未付款 / 已逾期 ──
+  // ── 找到訂單：區分已付款 / 未付款 ──
   if (step === 'bankcode') {
     const od = window._lookupOrder;
-
-    // 逾期取消：直接顯示取消畫面
-    if (od.orderStatus === '已釋出') {
-      body.innerHTML = `
-        <div style="text-align:center;padding:2rem 0">
-          <div style="width:48px;height:48px;background:rgba(192,103,90,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 0.8rem">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C0675A" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-          </div>
-          <h3 style="font-family:'Shippori Mincho',serif;font-size:1.1rem;color:#C0675A">訂單已逾期取消</h3>
-          <div style="background:#FFF8F0;border-left:3px solid #E3B5A4;padding:1rem 1.2rem;margin:1.2rem 0;font-size:0.82rem;color:#9B7B72;line-height:2.2;text-align:left">
-            <div>訂單編號：<strong style="color:#3A2C28">${od.orderNo}</strong></div>
-            <div>商品：${od.cart}</div>
-            <div>總金額：$${od.total}</div>
-          </div>
-          <p style="font-size:0.82rem;color:#9B7B72;line-height:2;margin-bottom:1.2rem">
-            此訂單因超過 48 小時未完成匯款已自動取消。<br>
-            若您還需要購買，歡迎重新訂購。<br>
-            若有其他問題，請到官方 Line <strong>@shibread</strong> 私訊，謝謝。
-          </p>
-          <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
-            <a href="https://www.shibread.com/" 
-              style="display:inline-flex;align-items:center;background:#725752;color:#fff;padding:0.7rem 1.5rem;font-size:0.82rem;text-decoration:none;font-family:'Noto Serif TC',serif;">
-              前往官網重新訂購
-            </a>
-            <button onclick="closeLookup()"
-              style="background:none;border:1px solid rgba(114,87,82,0.2);color:#9B7B72;font-size:0.82rem;padding:0.7rem 1.2rem;cursor:pointer;font-family:'Noto Serif TC',serif;">
-              關閉
-            </button>
-          </div>
-        </div>`;
-      return;
-    }
-
    const expireDate = od.expireAt
    ? new Date(od.expireAt).toLocaleDateString('zh-TW')
   : '—';
@@ -529,7 +496,7 @@ const isPaid = !!od.bankCode;
         ? `<!-- 已付款：不需再填 -->
            <div style="text-align:center;padding:0.5rem 0 1rem">
              <p style="font-size:0.82rem;color:var(--mid);line-height:1.9;margin-bottom:1.2rem">
-               末五碼已送出，我確認後我們會以 Email 或 社群帳號 通知出貨時間
+               末五碼已送出，確認收款後，我們會以 Email 或 社群帳號 通知出貨時間
              </p>
              <button class="btn-next" style="padding:0.75rem 2rem" onclick="closeLookup()">關閉</button>
            </div>`
