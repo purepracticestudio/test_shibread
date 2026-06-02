@@ -43,7 +43,11 @@ let formData = {};
 function openCheckout() {
   if (!cart.length) return;
   checkoutStep = 1;
-  formData = {};
+  // 若 formData 已有資料（使用者修改購物車後重新開啟），保留不重置
+  // 只有在完全沒有資料時才初始化（首次開啟）
+  if (!formData.name && !formData.phone && !formData.email) {
+    formData = {};
+  }
   closeCart();
   renderCheckoutStep();
   document.getElementById('modalOverlay').classList.add('open');
@@ -53,16 +57,21 @@ function openCheckout() {
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('open');
   document.body.style.overflow = '';
-  // 步驟 3（匯款資訊）或步驟 4（完成）關閉時，清除購物車
-  // 代表訂單已建立，避免客戶誤以為沒有下單成功
+
   if (checkoutStep >= 3) {
+    // 步驟 3、4（訂單已建立）→ 清除購物車與表單資料
     cart = [];
+    formData = {};
     renderCart();
     checkoutStep = 1;
     // 重新讀取庫存並更新商品顯示（末五碼送出後庫存已扣）
     loadStocks().then(() => renderProducts());
   }
+  // 步驟 1、2 關閉時：保留 formData，讓使用者修改購物車後重新開啟仍有資料
 }
+
+// openCheckout 時若 formData 已有資料（從購物車返回），直接繼續步驟 1
+// 完全重置只在訂單完成後才發生
 
 function getCurrentShipping() {
   return document.getElementById('shippingSelect')?.value || 'local_delivery';
@@ -227,7 +236,7 @@ function renderCheckoutStep() {
         <h4>📦 訂單明細</h4>
         ${cart.map(i => `
           <div class="sum-item">
-           <span>${i.name} × ${i.qty}</span>
+            <span>${i.name} × ${i.qty}</span>
             <strong>$${i.price * i.qty}</strong>
           </div>`).join('')}
         <hr class="sum-div">
@@ -252,7 +261,7 @@ function renderCheckoutStep() {
       </div>
       <div class="modal-nav">
         <button class="btn-back" onclick="checkoutStep=1;renderCheckoutStep()">← 修改資料</button>
-        <button class="btn-next" onclick="confirmOrder()">確認並前往匯款 →</button>
+        <button class="btn-next" id="confirmBtn" onclick="handleConfirmOrder(this)">確認並前往匯款 →</button>
       </div>`;
     return;
   }
@@ -487,7 +496,7 @@ const isPaid = !!od.bankCode;
         ? `<!-- 已付款：不需再填 -->
            <div style="text-align:center;padding:0.5rem 0 1rem">
              <p style="font-size:0.82rem;color:var(--mid);line-height:1.9;margin-bottom:1.2rem">
-               末五碼已送出，我確認後我們會以 Email 或 社群帳號 通知出貨時間
+               末五碼已送出，確認收款後，我們會以 Email 或 社群帳號 通知出貨時間
              </p>
              <button class="btn-next" style="padding:0.75rem 2rem" onclick="closeLookup()">關閉</button>
            </div>`
@@ -689,8 +698,31 @@ function validateStep1() {
       socialPlatform,
       socialId,
     };
-    checkoutStep = 2;
-    renderCheckoutStep();
+
+    // 顯示查詢中狀態
+    const btn = document.querySelector('#modalBody .btn-next.btn-full');
+    if (btn) { btn.disabled = true; btn.textContent = '庫存確認中...'; }
+
+    // 確認庫存後再進入步驟 2
+    loadStocks().then(() => {
+      const outOfStock = cart.find(i => {
+        const p = PRODUCTS.find(p => p.id === i.id);
+        return p && i.qty > (p.stock ?? 99);
+      });
+      if (outOfStock) {
+        if (btn) { btn.disabled = false; btn.textContent = '下一步：確認訂單 →'; }
+        alert(`「${outOfStock.name}」庫存不足，請調整數量`);
+        renderProducts();
+        renderCart();
+        return;
+      }
+      checkoutStep = 2;
+      renderCheckoutStep();
+    }).catch(() => {
+      if (btn) { btn.disabled = false; btn.textContent = '下一步：確認訂單 →'; }
+      checkoutStep = 2;
+      renderCheckoutStep();
+    });
   }
 }
 
@@ -698,13 +730,20 @@ function validateStep1() {
 //  確認訂單 & 通知
 // ══════════════════════════════════════
 
-function confirmOrder() {
+// 步驟 2 確認按鈕：顯示查詢中狀態後呼叫 confirmOrder
+function handleConfirmOrder(btn) {
+  if (btn) { btn.disabled = true; btn.textContent = '確認中...'; }
+  confirmOrder(btn);
+}
+
+function confirmOrder(btn) {
   loadStocks().then(() => {
     const outOfStock = cart.find(i => {
       const p = PRODUCTS.find(p => p.id === i.id);
       return p && i.qty > (p.stock ?? 99);
     });
     if (outOfStock) {
+      if (btn) { btn.disabled = false; btn.textContent = '確認並前往匯款 →'; }
       alert(`「${outOfStock.name}」庫存不足，請調整數量`);
       renderProducts();
       renderCart();
@@ -714,6 +753,8 @@ function confirmOrder() {
     checkoutStep = 3;
     renderCheckoutStep();
     sendOrderCreatedNotify(); // 下單時立即寄確認信（不含末五碼）
+  }).catch(() => {
+    if (btn) { btn.disabled = false; btn.textContent = '確認並前往匯款 →'; }
   });
 }
 

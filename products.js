@@ -2,7 +2,7 @@
 //  products.js — 動態商品載入 v2.2  2026-06
 // ═══════════════════════════════════════════════════════
 
-const STOCK_API_URL = 'https://script.google.com/macros/s/AKfycbwUyoUOQKOxCfzZtJhDwSIhaBuuMM9VMAl52XjIcL78iXDZZbjFV8bTA8T--5JJfWacSQ/exec';
+const STOCK_API_URL = 'https://script.google.com/macros/s/AKfycbyvGXzhxFz94TGxL4v0Kd5o5tJU36ZdS_f5afAZFacAyAQVPUpopxCthTakK0szNs1g-A/exec';
 
 // 全域商品陣列（cart.js 也會使用這個陣列）
 let PRODUCTS = [];
@@ -28,7 +28,11 @@ function loadProducts() {
         // 並重新指定 id = 0, 1, 2... 讓 cart.js 可以正確比對
         PRODUCTS = raw
           .filter(p => p.active === true)
-          .map((p, idx) => ({ ...p, id: idx }));
+          .map((p, idx) => ({
+            ...p,
+            id:      idx,       // 渲染與購物車用的流水號
+            stockId: p.id       // 保留原始 D 欄值，供庫存比對用
+          }));
 
         resolve({ deliveryDate: data.deliveryDate || '' });
       } catch(e) {
@@ -47,7 +51,7 @@ function loadProducts() {
       resolve({ deliveryDate: '' });
     };
     document.body.appendChild(script);
-    setTimeout(() => resolve({ deliveryDate: '' }), 8000);
+    setTimeout(() => resolve({ deliveryDate: '' }), 10000); //商品載入的時間
   });
 }
 
@@ -209,7 +213,7 @@ function renderProducts() {
     renderProducts();
   } catch(e) {
     console.error('商品初始化失敗', e);
-    renderProducts();
+    // renderProducts();  不提前渲染，讓畫面保持空白等待
   } finally {
     const loading = document.getElementById('productsLoading');
     if (loading) loading.style.display = 'none';
