@@ -102,13 +102,13 @@ function applyDeliveryDate(dateStr) {
   if (!dateStr) return;
 
   const navLink = document.querySelector('.nav-links a[href="#products"]');
-  if (navLink) navLink.textContent = dateStr + ' 預定商品';
+  if (navLink) navLink.textContent = dateStr + ' 預訂商品';
 
   const mobileLink = document.querySelector('.mobile-menu a[href="#products"]');
-  if (mobileLink) mobileLink.textContent = dateStr + ' 預定商品';
+  if (mobileLink) mobileLink.textContent = dateStr + ' 預訂商品';
 
   const sectionTitle = document.querySelector('#products .section-title');
-  if (sectionTitle) sectionTitle.textContent = dateStr + ' 預定商品';
+  if (sectionTitle) sectionTitle.textContent = dateStr + ' 預訂商品';
 
   const noticeDate = document.getElementById('delivery-date-display');
   if (noticeDate) noticeDate.textContent = dateStr;
