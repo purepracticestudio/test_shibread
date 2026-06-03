@@ -740,17 +740,37 @@ function validateStep1() {
 
     // 確認庫存後再進入步驟 2
     loadStocks().then(() => {
-      const outOfStock = cart.find(i => {
-        const p = PRODUCTS.find(p => p.id === i.id);
-        return p && i.qty > (p.stock ?? 99);
-      });
-      if (outOfStock) {
+      let hasIssue = false;
+      let messages = [];
+
+      // 逐一檢查購物車商品庫存
+      for (let i = cart.length - 1; i >= 0; i--) {
+        const item = cart[i];
+        const p = PRODUCTS.find(p => p.id === item.id);
+        if (!p) continue;
+        const stock = p.stock ?? 99;
+
+        if (stock <= 0) {
+          // 庫存為 0 → 移除商品，提示重新選擇
+          messages.push(`「${item.name}」已售完，已從購物車移除，請重新選擇商品`);
+          cart.splice(i, 1);
+          hasIssue = true;
+        } else if (item.qty > stock) {
+          // 庫存不足 → 自動調整到庫存上限
+          messages.push(`「${item.name}」庫存僅剩 ${stock} 顆，數量已自動調整`);
+          item.qty = stock;
+          hasIssue = true;
+        }
+      }
+
+      if (hasIssue) {
         if (btn) { btn.disabled = false; btn.textContent = '下一步：確認訂單 →'; }
-        alert(`「${outOfStock.name}」庫存不足，請調整數量`);
+        alert(messages.join('\n'));
         renderProducts();
         renderCart();
         return;
       }
+
       checkoutStep = 2;
       renderCheckoutStep();
     }).catch(() => {
@@ -773,17 +793,36 @@ function handleConfirmOrder(btn) {
 
 function confirmOrder(btn) {
   loadStocks().then(() => {
-    const outOfStock = cart.find(i => {
-      const p = PRODUCTS.find(p => p.id === i.id);
-      return p && i.qty > (p.stock ?? 99);
-    });
-    if (outOfStock) {
+    let hasIssue = false;
+    let messages = [];
+
+    for (let i = cart.length - 1; i >= 0; i--) {
+      const item = cart[i];
+      const p = PRODUCTS.find(p => p.id === item.id);
+      if (!p) continue;
+      const stock = p.stock ?? 99;
+
+      if (stock <= 0) {
+        messages.push(`「${item.name}」已售完，已從購物車移除，請重新選擇商品`);
+        cart.splice(i, 1);
+        hasIssue = true;
+      } else if (item.qty > stock) {
+        messages.push(`「${item.name}」庫存僅剩 ${stock} 顆，數量已自動調整`);
+        item.qty = stock;
+        hasIssue = true;
+      }
+    }
+
+    if (hasIssue) {
       if (btn) { btn.disabled = false; btn.textContent = '確認並前往匯款 →'; }
-      alert(`「${outOfStock.name}」庫存不足，請回購物車調整數量`);
+      alert(messages.join('\n'));
       renderProducts();
       renderCart();
+      checkoutStep = 1;
+      renderCheckoutStep();
       return;
     }
+
     formData.orderNo = 'SB' + Date.now().toString().slice(-8);
     checkoutStep = 3;
     renderCheckoutStep();
