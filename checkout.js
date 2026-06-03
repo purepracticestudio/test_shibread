@@ -483,8 +483,8 @@ const isPaid = !!od.bankCode;
     // 計算剩餘天數
     const daysLeft = Math.ceil((od.expireAt - Date.now()) / (1000 * 60 * 60 * 24));
     const expireNote = daysLeft <= 3
-      ? `<span style="color:var(--warn,#c0675a)">⚠️ ⏱ 查詢紀錄將於下單後 14 天自動清除 </span>`
-      : `⏱ 查詢紀錄將於下單後 14 天自動清除`;
+      ? `<span style="color:var(--warn,#c0675a)">⚠️ ⏱ 查詢紀錄將於下單後 14 天或已送貨後，自動清除 </span>`
+      : `⏱ 查詢紀錄將於下單後 14 天或已送貨後，自動清除`;
 
     body.innerHTML = `
       <div style="text-align:center;margin-bottom:1.5rem">
@@ -511,8 +511,9 @@ const isPaid = !!od.bankCode;
           ? `<div style="margin-top:0.4rem;padding-top:0.4rem;border-top:1px solid rgba(227,181,164,0.4)">
                付款狀態：<strong style="color:#4A7C59">✓ 已送出末五碼</strong><br>
                末五碼：<strong style="color:var(--dark);letter-spacing:0.15em">${od.bankCode}</strong><br>
-               付款時間：${od.paidAt}
+               付款時間：${od.paidAt || '—'}
              </div>`
+             // 付款時間：${od.paidAt} 目前沒有欄位帶入
           : `<div>付款狀態：<span style="color:var(--warn,#c0675a)">⏳ 待付款</span></div>
              <div>銀行：${BANK_INFO.bank}</div>
              <div>匯款帳號：${BANK_INFO.account}</div>`
@@ -555,7 +556,7 @@ const isPaid = !!od.bankCode;
     return;
   }
 
-  // ── 補填末五碼完成 ──
+  // ── 補填末五碼完成 ──  // 付款時間：${od.paidAt} 目前沒有欄位帶入
   if (step === 'done') {
     const od = window._lookupOrder;
     body.innerHTML = `
@@ -567,10 +568,12 @@ const isPaid = !!od.bankCode;
         <p style="font-size:0.82rem;color:var(--mid);line-height:2.2">
           訂單編號：<strong style="color:var(--dark)">${od.orderNo}</strong><br>
           末五碼：<strong style="color:var(--dark);letter-spacing:0.15em">${od.bankCode}</strong><br>
-          ${od.paidAt ? `付款時間：${od.paidAt}<br>` : ''}
+          ${od.paidAt ? `付款時間：${od.paidAt || '—'}<br>` : ''}
+          
           確認後我們會以 Email 或 社群帳號 通知出貨時間<br>
           感謝支持食麵包 ♡
         </p>
+        
         <button onclick="closeLookup()"
           style="margin-top:1rem;background:var(--primary);color:#fff;border:none;padding:0.75rem 2rem;font-family:'Noto Serif TC',serif;font-size:0.85rem;cursor:pointer;">
           關閉
