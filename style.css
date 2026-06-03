@@ -9,8 +9,8 @@
   --warm-bg:    #FAF6F1;
   --cream:      #F5EDE3;
   --dark:       #3A2C28;
-  --mid:        #9B7B72;
-  --light-text: #B89891;
+  --mid:        #623E3B;/*#9B7B72*/
+  --light-text: #b47d6d;/*#B89891*/
   --white:      #FFFDF9;
 }
 
@@ -47,7 +47,7 @@ nav {
   transition: border-color 0.3s;
 }
 .nav-logo {
-  font-family: 'Shippori Mincho', serif;
+  font-family: 'Noto Serif TC', serif;
   font-size: 1.35rem; font-weight: 600;
   color: var(--primary); letter-spacing: 0.08em; text-decoration: none;
 }
@@ -107,7 +107,7 @@ nav {
   animation: fadeUp 0.8s 0.2s ease forwards;
 }
 .hero-title {
-  font-family: 'Shippori Mincho', serif;
+  font-family: 'Noto Serif TC', serif;
   font-size: clamp(3.5rem, 7vw, 6rem); font-weight: 600;
   line-height: 1.1; color: var(--primary); margin-bottom: 0.8rem;
   opacity: 0; animation: fadeUp 0.9s 0.35s ease forwards;
@@ -135,7 +135,7 @@ nav {
 .hero-deco {
   position: absolute; bottom: 3rem; left: 5rem;
   font-family: 'IM Fell English', serif; font-style: italic;
-  font-size: 0.72rem; color: var(--light-text); letter-spacing: 0.2em;
+  font-size: 0.8rem; color: var(--light-text); letter-spacing: 0.2em;
   opacity: 0; animation: fadeIn 1s 1.2s ease forwards;
 }
 .hero-right { position: relative; overflow: hidden; }
@@ -161,7 +161,7 @@ section { padding: 7rem 0; }
   display: block; margin-bottom: 0.6rem;
 }
 .section-title {
-  font-family: 'Shippori Mincho', serif;
+  font-family: 'Noto Serif TC', serif;
   font-size: clamp(1.6rem, 3vw, 2.2rem);
   color: var(--primary); font-weight: 600; letter-spacing: 0.08em;
 }
@@ -173,7 +173,7 @@ section { padding: 7rem 0; }
 .story { background: var(--cream); position: relative; overflow: hidden; }
 .story::before {
   content: '食'; position: absolute;
-  font-family: 'Shippori Mincho', serif; font-size: 28rem;
+  font-family: 'Noto Serif TC', serif; font-size: 28rem;
   color: rgba(114,87,82,0.04); right: -4rem; top: 50%;
   transform: translateY(-50%); pointer-events: none;
 }
@@ -210,12 +210,12 @@ section { padding: 7rem 0; }
 .product-img { height: 300px; overflow: hidden; position: relative; background: var(--cream); }
 .bread-illustration { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
 .product-body { padding: 2rem; display: flex; flex-direction: column; gap: 0.7rem; }
-.product-tag { font-family: 'IM Fell English', serif; font-style: italic; font-size: 0.72rem; color: var(--mid); letter-spacing: 0.2em; }
-.product-name { font-family: 'Shippori Mincho', serif; font-size: 1.2rem; font-weight: 600; color: var(--primary); line-height: 1.5; }
-.product-price { font-family: 'IM Fell English', serif; font-size: 1.5rem; color: var(--accent); }
+.product-tag { font-family: 'IBM Plex Serif', serif; font-style: italic; font-size: 0.8rem; color: var(--mid); letter-spacing: 0.2em; }
+.product-name { font-family: 'Noto Serif TC', serif; font-size: 1.2rem; font-weight: 600; color: var(--primary); line-height: 1.5; }
+.product-price { font-family: 'IBM Plex Serif', serif; font-size: 1.5rem; color: var(--accent); }
 .product-price small { font-size: 0.9rem; color: var(--mid); font-family: 'Noto Serif TC', serif; }
-.product-desc { font-size: 0.84rem; line-height: 1.9; color: #7a5a54; flex: 1; }
-.product-ingredients { font-size: 0.72rem; color: var(--light-text); line-height: 1.8; padding-top: 0.8rem; border-top: 1px solid rgba(227,181,164,0.3); }
+.product-desc { font-size: 0.9rem; line-height: 1.9; color: #7a5a54; flex: 1; }
+.product-ingredients { font-size: 0.84rem; color: var(--light-text); line-height: 1.8; padding-top: 0.8rem; border-top: 1px solid rgba(227,181,164,0.3); }
 .product-badge { position: absolute; top: 1rem; right: 1rem; background: var(--primary); color: var(--white); font-size: 0.68rem; padding: 0.3rem 0.7rem; letter-spacing: 0.1em; }
 
 /* 數量控制 */
@@ -228,7 +228,7 @@ section { padding: 7rem 0; }
   transition: background 0.15s;
 }
 .qty-btn:hover { background: var(--cream); }
-.qty-val { font-family: 'Shippori Mincho', serif; font-size: 1rem; min-width: 24px; text-align: center; }
+.qty-val { font-family: 'Noto Serif TC', serif; font-size: 1rem; min-width: 24px; text-align: center; }
 
 /* 加入購物車 */
 .add-to-cart {
@@ -248,7 +248,7 @@ section { padding: 7rem 0; }
 .philosophy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; margin-top: 4rem; }
 .philosophy-item { text-align: center; padding: 2.5rem 1.5rem; background: var(--white); border-top: 2px solid var(--light-text); }
 .philosophy-icon { width: 52px; height: 52px; margin: 0 auto 1.2rem; color: var(--primary); }
-.philosophy-item h3 { font-family: 'Shippori Mincho', serif; font-size: 1rem; color: var(--primary); margin-bottom: 0.8rem; }
+.philosophy-item h3 { font-family: 'Noto Serif TC', serif; font-size: 1rem; color: var(--primary); margin-bottom: 0.8rem; }
 .philosophy-item p { font-size: 0.82rem; color: var(--mid); line-height: 1.9; }
 
 /* ════════════════════════════
@@ -260,14 +260,14 @@ footer { background: var(--dark); padding: 4rem 2rem 2rem; color: rgba(255,255,2
   display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
   padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 2rem;
 }
-.footer-brand { font-family: 'Shippori Mincho', serif; font-size: 1.4rem; font-weight: 600; color: var(--light-text); margin-bottom: 1rem; }
+.footer-brand { font-family: 'Noto Serif TC', serif; font-size: 1.4rem; font-weight: 600; color: var(--light-text); margin-bottom: 1rem; }
 .footer-brand small { display: block; font-family: 'IM Fell English', serif; font-style: italic; font-size: 0.75rem; color: var(--mid); margin-top: 0.2rem; }
 .footer-slogan { font-size: 0.83rem; line-height: 2; margin-bottom: 1.5rem; }
 .footer-ig { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--light-text); text-decoration: none; font-size: 0.82rem; transition: opacity 0.2s; }
 .footer-ig:hover { opacity: 0.75; }
-.footer-info h4 { font-family: 'Shippori Mincho', serif; font-size: 0.85rem; color: var(--light-text); letter-spacing: 0.15em; margin-bottom: 1.2rem; }
+.footer-info h4 { font-family: 'Noto Serif TC', serif; font-size: 0.85rem; color: var(--light-text); letter-spacing: 0.15em; margin-bottom: 1.2rem; }
 .footer-info p { font-size: 0.8rem; line-height: 2.2; }
-.footer-bottom { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; font-size: 0.72rem; }
+.footer-bottom { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; font-size: 0.8rem; }
 
 /* ════════════════════════════
    CART DRAWER
@@ -291,14 +291,14 @@ footer { background: var(--dark); padding: 4rem 2rem 2rem; color: rgba(255,255,2
   padding: 1.5rem 1.8rem; border-bottom: 1px solid rgba(227,181,164,0.3);
   display: flex; align-items: center; justify-content: space-between;
 }
-.cart-header h2 { font-family: 'Shippori Mincho', serif; font-size: 1.1rem; color: var(--primary); }
+.cart-header h2 { font-family: 'Noto Serif TC', serif; font-size: 1.1rem; color: var(--primary); }
 .cart-close { background: none; border: none; cursor: pointer; color: var(--mid); font-size: 1.4rem; }
 .cart-close:hover { color: var(--primary); }
 .cart-items { flex: 1; overflow-y: auto; padding: 1.5rem 1.8rem; }
 .cart-empty { text-align: center; padding: 4rem 0; color: var(--light-text); font-size: 0.88rem; line-height: 2.2; }
 .cart-item { display: grid; grid-template-columns: 52px 1fr auto; gap: 1rem; align-items: center; padding: 1rem 0; border-bottom: 1px solid rgba(227,181,164,0.2); }
 .cart-item-thumb { width: 52px; height: 52px; background: var(--cream); display: flex; align-items: center; justify-content: center; font-size: 1.7rem; }
-.cart-item-name { font-family: 'Shippori Mincho', serif; font-size: 0.88rem; color: var(--primary); margin-bottom: 0.25rem; }
+.cart-item-name { font-family: 'Noto Serif TC', serif; font-size: 0.88rem; color: var(--primary); margin-bottom: 0.25rem; }
 .cart-item-price { font-size: 0.78rem; color: var(--mid); }
 .cart-item-remove { background: none; border: none; color: var(--light-text); cursor: pointer; font-size: 0.9rem; padding: 0.2rem; }
 .cart-item-remove:hover { color: var(--primary); }
@@ -320,8 +320,8 @@ footer { background: var(--dark); padding: 4rem 2rem 2rem; color: rgba(255,255,2
 }
 .cart-row { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--mid); margin-bottom: 0.45rem; }
 .cart-total-row { display: flex; justify-content: space-between; align-items: baseline; margin: 0.8rem 0 1.5rem; }
-.cart-total-label { font-family: 'Shippori Mincho', serif; font-size: 0.9rem; color: var(--primary); }
-.cart-total-val { font-family: 'IM Fell English', serif; font-size: 1.6rem; color: var(--primary); }
+.cart-total-label { font-family: 'Noto Serif TC', serif; font-size: 0.9rem; color: var(--primary); }
+.cart-total-val { font-family: 'IBM Plex Serif', serif; font-size: 1.6rem; color: var(--primary); }
 .checkout-btn { width: 100%; background: var(--primary); color: var(--white); border: none; padding: 1rem; font-family: 'Noto Serif TC', serif; font-size: 0.88rem; letter-spacing: 0.15em; cursor: pointer; transition: background 0.2s; }
 .checkout-btn:hover { background: var(--dark); }
 
@@ -345,7 +345,7 @@ footer { background: var(--dark); padding: 4rem 2rem 2rem; color: rgba(255,255,2
   position: sticky; top: 0; background: var(--white); z-index: 5;
   display: flex; align-items: center; justify-content: space-between;
 }
-.modal-hdr h2 { font-family: 'Shippori Mincho', serif; font-size: 1.1rem; color: var(--primary); }
+.modal-hdr h2 { font-family: 'Noto Serif TC', serif; font-size: 1.1rem; color: var(--primary); }
 .modal-close2 { background: none; border: none; cursor: pointer; color: var(--mid); font-size: 1.4rem; }
 .modal-close2:hover { color: var(--primary); }
 .modal-body { padding: 2rem; }
@@ -357,7 +357,7 @@ footer { background: var(--dark); padding: 4rem 2rem 2rem; color: rgba(255,255,2
   width: 28px; height: 28px; border-radius: 50%;
   margin: 0 auto 0.4rem; border: 2px solid rgba(114,87,82,0.2);
   background: var(--white); display: flex; align-items: center; justify-content: center;
-  font-size: 0.72rem; color: var(--light-text); font-weight: 700;
+  font-size: 0.8rem; color: var(--light-text); font-weight: 700;
   position: relative; z-index: 1; transition: all 0.3s;
 }
 .step.active .step-dot { border-color: var(--primary); background: var(--primary); color: var(--white); }
@@ -400,7 +400,7 @@ textarea.form-input { resize: vertical; min-height: 78px; }
 
 /* 訂單摘要 */
 .order-summary { background: var(--cream); padding: 1.2rem 1.4rem; margin-bottom: 1.4rem; border-left: 3px solid var(--accent); }
-.order-summary h4 { font-family: 'Shippori Mincho', serif; font-size: 0.85rem; color: var(--primary); margin-bottom: 0.8rem; }
+.order-summary h4 { font-family: 'Noto Serif TC', serif; font-size: 0.85rem; color: var(--primary); margin-bottom: 0.8rem; }
 .sum-item  { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--mid); padding: 0.28rem 0; }
 .sum-item strong { color: var(--dark); }
 .sum-div   { border: none; border-top: 1px solid rgba(227,181,164,0.4); margin: 0.5rem 0; }
@@ -408,11 +408,11 @@ textarea.form-input { resize: vertical; min-height: 78px; }
 
 /* 匯款資訊框 */
 .transfer-box { background: var(--cream); border: 1px solid rgba(227,181,164,0.5); padding: 1.4rem; margin-bottom: 1.4rem; }
-.transfer-box h4 { font-family: 'Shippori Mincho', serif; font-size: 0.9rem; color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+.transfer-box h4 { font-family: 'Noto Serif TC', serif; font-size: 0.9rem; color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
 .tr-row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(227,181,164,0.25); }
 .tr-row:last-child { border-bottom: none; }
 .tr-label { font-size: 0.77rem; color: var(--mid); }
-.tr-val   { font-size: 0.88rem; color: var(--dark); font-weight: 500; font-family: 'Shippori Mincho', serif; display: flex; align-items: center; gap: 0.5rem; }
+.tr-val   { font-size: 0.88rem; color: var(--dark); font-weight: 500; font-family: 'Noto Serif TC', serif; display: flex; align-items: center; gap: 0.5rem; }
 .tr-amount{ font-family: 'IM Fell English', serif; font-size: 1.4rem; color: var(--primary); }
 .copy-btn {
   background: none; border: 1px solid rgba(114,87,82,0.25); color: var(--mid);
@@ -446,8 +446,8 @@ textarea.form-input { resize: vertical; min-height: 78px; }
   border-radius: 50%; display: flex; align-items: center;
   justify-content: center; margin: 0 auto 1.5rem;
 }
-.success-wrap h3 { font-family: 'Shippori Mincho', serif; font-size: 1.25rem; color: var(--primary); margin-bottom: 0.6rem; }
-.success-order { font-family: 'IM Fell English', serif; font-size: 1rem; color: var(--accent); margin: 0.4rem 0 1rem; }
+.success-wrap h3 { font-family: 'Noto Serif TC', serif; font-size: 1.25rem; color: var(--primary); margin-bottom: 0.6rem; }
+.success-order { font-family: 'IBM Plex Serif', serif; font-size: 1rem; color: var(--accent); margin: 0.4rem 0 1rem; }
 
 /* ════════════════════════════
    ANIMATIONS
@@ -572,7 +572,7 @@ textarea.form-input { resize: vertical; min-height: 78px; }
 }
 .bank-code-title {
   display: flex; align-items: center; gap: 0.5rem;
-  font-family: 'Shippori Mincho', serif;
+  font-family: 'Noto Serif TC', serif;
   font-size: 0.9rem; font-weight: 600;
   color: var(--primary); margin-bottom: 1rem;
 }
@@ -603,10 +603,10 @@ textarea.form-input { resize: vertical; min-height: 78px; }
   padding: 0.6rem 1rem; margin-bottom: 1rem;
 }
 .order-ref-label {
-  font-size: 0.72rem; color: var(--light-text); white-space: nowrap;
+  font-size: 0.8rem; color: var(--light-text); white-space: nowrap;
 }
 .order-ref-no {
-  font-family: 'Shippori Mincho', serif;
+  font-family: 'Noto Serif TC', serif;
   font-size: 1rem; color: var(--primary); font-weight: 600;
   letter-spacing: 0.08em;
 }
@@ -648,7 +648,7 @@ textarea.form-input { resize: vertical; min-height: 78px; }
   display: flex; align-items: center; justify-content: space-between;
 }
 .lookup-hdr h2 {
-  font-family: 'Shippori Mincho', serif;
+  font-family: 'Noto Serif TC', serif;
   font-size: 1rem; color: var(--primary);
 }
 .lookup-close {
@@ -707,7 +707,7 @@ textarea.form-input { resize: vertical; min-height: 78px; }
 }
 .notice-title {
   display: flex; align-items: center; gap: 0.5rem;
-  font-family: 'Shippori Mincho', serif;
+  font-family: 'Noto Serif TC', serif;
   font-size: 0.92rem; font-weight: 600;
   color: var(--primary); margin-bottom: 0.9rem;
 }
@@ -768,7 +768,7 @@ textarea.form-input { resize: vertical; min-height: 78px; }
 }
 .bank-code-title {
   display: flex; align-items: center; gap: 0.5rem;
-  font-family: 'Shippori Mincho', serif; font-size: 0.9rem;
+  font-family: 'Noto Serif TC', serif; font-size: 0.9rem;
   font-weight: 600; color: var(--primary); margin-bottom: 1rem;
 }
 .later-divider {
@@ -785,9 +785,9 @@ textarea.form-input { resize: vertical; min-height: 78px; }
   background: var(--white); border: 1px solid rgba(114,87,82,0.2);
   padding: 0.6rem 1rem; margin-bottom: 1rem;
 }
-.order-ref-label { font-size: 0.72rem; color: var(--light-text); white-space: nowrap; }
+.order-ref-label { font-size: 0.8rem; color: var(--light-text); white-space: nowrap; }
 .order-ref-no {
-  font-family: 'Shippori Mincho', serif; font-size: 1rem;
+  font-family: 'Noto Serif TC', serif; font-size: 1rem;
   color: var(--primary); font-weight: 600; letter-spacing: 0.08em;
 }
 .btn-later {
@@ -818,7 +818,7 @@ textarea.form-input { resize: vertical; min-height: 78px; }
   position: sticky; top: 0; background: var(--white); z-index: 1;
   display: flex; align-items: center; justify-content: space-between;
 }
-.lookup-hdr h2 { font-family: 'Shippori Mincho', serif; font-size: 1rem; color: var(--primary); }
+.lookup-hdr h2 { font-family: 'Noto Serif TC', serif; font-size: 1rem; color: var(--primary); }
 .lookup-close { background: none; border: none; cursor: pointer; color: var(--mid); font-size: 1.4rem; }
 .lookup-close:hover { color: var(--primary); }
 .lookup-body { padding: 1.8rem; }
@@ -935,7 +935,7 @@ textarea.form-input { resize: vertical; min-height: 78px; }
 /* 售完 / 低庫存標示 */
 .stock-badge {
   position: absolute; bottom: 0.8rem; left: 0.8rem;
-  font-size: 0.72rem; font-family: 'Noto Serif TC', serif;
+  font-size: 0.8rem; font-family: 'Noto Serif TC', serif;
   padding: 0.25rem 0.65rem; letter-spacing: 0.08em;
   font-weight: 600; pointer-events: none;
 }
@@ -1010,7 +1010,7 @@ textarea.form-input { resize: vertical; min-height: 78px; }
    購物車商品庫存提示
 ════════════════════════════ */
 .cart-stock-hint {
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   font-family: 'Noto Serif TC', serif;
   margin-top: 0.25rem;
   letter-spacing: 0.05em;

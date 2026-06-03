@@ -172,13 +172,13 @@ function renderCheckoutStep() {
       </div>
       <div class="form-group">
         <label>備註 / 特殊需求</label>
-        <textarea class="form-input" id="fno" placeholder="例如：指定口味、送禮包裝需求...">${formData.note || ''}</textarea>
+        <textarea class="form-input" id="fno" placeholder="例如：指定口味、需求詢問...">${formData.note || ''}</textarea>
       </div>
 
-      <!-- 社群聯繫方式（必填，單選）-->
+      <!-- 社群聯繫方式（不用必填，單選）-->
       <div class="form-group">
-        <label>社群聯繫方式 <span class="req">*</span></label>
-        <div class="form-note" style="margin-bottom:0.6rem">請選擇一項，方便我們聯繫確認出貨</div>
+        <label>社群聯繫方式 <span class="req"></span></label>
+        <div class="form-note" style="margin-bottom:0.6rem">可選擇一項，方便我們聯繫確認出貨</div>
         <div class="radio-group">
 
           <!-- Instagram -->
@@ -204,7 +204,7 @@ function renderCheckoutStep() {
             onclick="selectSocial(this, 'line')">
             <input type="radio" name="social" value="line" ${formData.socialPlatform === 'line' ? 'checked' : ''}>
             <div class="rot" style="display:flex;align-items:center;gap:0.5rem">
-              <strong>LINE</strong>
+              <strong>LINE</strong> <p>建議先加入官方 LINE <a href="https://line.me/ti/p/~@shibread" target="_blank" class="footer-social-link">@shibread </a> 我們才可以聯繫到您</p>
             </div>
           </label>
         </div>
@@ -326,7 +326,7 @@ function renderCheckoutStep() {
         <div class="later-box">
           <p style="font-size:0.82rem;color:var(--mid);margin-bottom:1rem;line-height:1.9;text-align:center">
             先儲存訂單編號，匯款後再回來補填<br>
-            <span style="font-size:0.76rem">查詢時需要：訂單編號 + Email 或電話</span>
+            <span style="font-size:0.82rem">查詢時需要：訂單編號 + Email 或電話</span>
           </p>
           <div class="order-ref-box">
             <span class="order-ref-label">您的訂單編號</span>
@@ -343,9 +343,9 @@ function renderCheckoutStep() {
         <strong>注意事項</strong><br>
         · 確認信已寄至您的 Email，信中含訂單編號與匯款帳號<br>
         · 請於 48 小時內完成匯款並補填末五碼<br>
-        · 訂單查詢紀錄將於 <strong>14 天後</strong>自動清除，請盡早完成匯款<br>
+        · 訂單查詢紀錄會於 <strong>到貨後</strong>和<strong>14天後</strong>自動清除，請盡早完成匯款<br>
         ${formData.ship === 'seven' ? '· 7-11 冷凍店到店僅限已付款取件，無貨到付款<br>' : ''}
-        · 如有疑問請到 Line 官方帳號 @shibread 詢問
+        · 如有疑問請到 Line 官方帳號 <a href="https://line.me/ti/p/~@shibread" target="_blank" class="footer-social-link">@shibread </a> 詢問
       </div>`;
     return;
   }
@@ -366,9 +366,9 @@ function renderCheckoutStep() {
           感謝支持食麵包的每一顆手工麵包 ♡
         </p>
         <div style="background:rgba(227,181,164,0.12);border-left:3px solid var(--accent);padding:0.65rem 1rem;margin:1.2rem 0;font-size:0.74rem;color:var(--light-text);line-height:1.9;text-align:left">
-          ⏱ 訂單查詢紀錄將於 <strong style="color:var(--mid)">${expireDate}</strong> 自動清除（下單後 14 天）<br>
+          ⏱ 訂單查詢紀錄會於 <strong>到貨後</strong>和<strong style="color:var(--mid)">${expireDate}</strong> 自動清除（下單後 14 天）<br>
           到期前可透過「查詢訂單」確認付款狀態<br>
-          如有疑問請到 Line 官方帳號 @shibread 詢問
+          如有疑問請到 Line 官方帳號 <a href="https://line.me/ti/p/~@shibread" target="_blank" class="footer-social-link">@shibread </a> 詢問
         </div>
         <div style="margin-top:1.2rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
           <button onclick="closeLookup && openOrderLookup()"
@@ -415,7 +415,7 @@ function renderLookupStep(step) {
         <div style="width:48px;height:48px;background:rgba(114,87,82,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 0.8rem">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#725752" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
         </div>
-        <h3 style="font-family:'Shippori Mincho',serif;font-size:1.1rem;color:var(--primary)">查詢訂單 / 補填末五碼</h3>
+        <h3 style="font-family:'Noto Serif TC', serif;font-size:1.1rem;color:var(--primary)">查詢訂單 / 補填末五碼</h3>
         <p style="font-size:0.82rem;color:var(--mid);margin-top:0.5rem;line-height:1.8">
           輸入下單時的訂單編號，以及 Email 或電話驗證身份
         </p>
@@ -450,7 +450,7 @@ function renderLookupStep(step) {
           <div style="width:48px;height:48px;background:rgba(192,103,90,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 0.8rem">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C0675A" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
           </div>
-          <h3 style="font-family:'Shippori Mincho',serif;font-size:1.1rem;color:#C0675A">訂單已逾期取消</h3>
+          <h3 style="font-family:'Noto Serif TC', serif;font-size:1.1rem;color:#C0675A">訂單已逾期取消</h3>
           <div style="background:#FFF8F0;border-left:3px solid #E3B5A4;padding:1rem 1.2rem;margin:1.2rem 0;font-size:0.82rem;color:#9B7B72;line-height:2.2;text-align:left">
             <div>訂單編號：<strong style="color:#3A2C28">${od.orderNo}</strong></div>
             <div>商品：${od.cart}</div>
@@ -459,7 +459,7 @@ function renderLookupStep(step) {
           <p style="font-size:0.82rem;color:#9B7B72;line-height:2;margin-bottom:1.2rem">
             此訂單因超過 48 小時未完成匯款已自動取消。<br>
             若您還需要購買，歡迎重新訂購。<br>
-            若有其他問題，請到官方 Line <strong>@shibread</strong> 私訊，謝謝。
+            若有其他問題，請到官方 Line <strong><a href="https://line.me/ti/p/~@shibread" target="_blank" class="footer-social-link">@shibread </a> </strong> 私訊，謝謝。
           </p>
           <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
             <a href="https://www.shibread.com/" 
@@ -522,7 +522,7 @@ const isPaid = !!od.bankCode;
       <!-- 到期提示 -->
       <div style="background:rgba(227,181,164,0.12);border-left:3px solid var(--accent);padding:0.65rem 1rem;margin-bottom:1.2rem;font-size:0.74rem;color:var(--primary);line-height:1.8">
         ${expireNote}<br>
-        如有疑問請到 Line 官方帳號 @shibread 詢問
+        如有疑問請到 Line 官方帳號<a href="https://line.me/ti/p/~@shibread" target="_blank" class="footer-social-link">@shibread </a> 詢問
       </div>
 
       ${isPaid
@@ -720,7 +720,9 @@ function validateStep1() {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))    { showErr('ee',  true, '請填寫有效 Email');          ok = false; } else { showErr('ee',  false); }
   if (ship === 'local_delivery' && !addr)             { showErr('ea',  true, '請填寫新竹收件地址');         ok = false; } else { showErr('ea',  false); }
   if (ship === 'seven' && !seven)                     { showErr('ess', true, '請填寫 7-11 取件店名及地址'); ok = false; } else { showErr('ess', false); }
-  if (!socialPlatform || !socialId)                  { showErr('e-social', true, '請選擇並填寫社群帳號'); ok = false; } else { showErr('e-social', false); }
+  showErr('e-social', false);//不必填寫
+  //if (!socialPlatform || !socialId)                  { showErr('e-social', true, '請選擇並填寫社群帳號'); ok = false; } else { showErr('e-social', false); }
+
 
   if (ok) {
     formData = {
@@ -734,7 +736,7 @@ function validateStep1() {
 
     // 顯示查詢中狀態
     const btn = document.querySelector('#modalBody .btn-next.btn-full');
-    if (btn) { btn.disabled = true; btn.textContent = '庫存確認中...'; }
+    if (btn) { btn.disabled = true; btn.textContent = '確認中...'; }
 
     // 確認庫存後再進入步驟 2
     loadStocks().then(() => {
@@ -777,7 +779,7 @@ function confirmOrder(btn) {
     });
     if (outOfStock) {
       if (btn) { btn.disabled = false; btn.textContent = '確認並前往匯款 →'; }
-      alert(`「${outOfStock.name}」庫存不足，請調整數量`);
+      alert(`「${outOfStock.name}」庫存不足，請回購物車調整數量`);
       renderProducts();
       renderCart();
       return;
