@@ -2,7 +2,7 @@
 //  products.js — 動態商品載入 v2.2  2026-06
 // ═══════════════════════════════════════════════════════
 
-const STOCK_API_URL = 'https://script.google.com/macros/s/AKfycbyrX-vvn9L1myv0lhSd4KC6ZO5N-CW2I-nDaYh1DRMzFsBuNcqBZzvp3LosDy4D4n-Gvw/exec';
+const STOCK_API_URL = 'https://script.google.com/macros/s/AKfycbwhCW38i4RR7Pj3gzNUJMl6DfHCvr-1scCmtwDNhnM1eEz-B6NNwOly0e_-7fi99oBfcg/exec';
 
 // 全域商品陣列（cart.js 也會使用這個陣列）
 let PRODUCTS = [];
