@@ -72,7 +72,7 @@ function loadStocks() {
         PRODUCTS.forEach(p => {
           // stockId 是原始 D 欄值（字串），庫存回傳的 key 也是字串
           const key = String(p.stockId);
-          if (data[key] !== undefined) p.stock = Number(data[key]);
+          if (data[key] !== undefined) p.stock = Math.max(0, Number(data[key])); // 防止負數
         });
       } catch(e) {
         console.warn('庫存資料解析失敗', e);
@@ -218,4 +218,12 @@ function renderProducts() {
     const loading = document.getElementById('productsLoading');
     if (loading) loading.style.display = 'none';
   }
+
+  // 每 60 秒自動更新庫存並重新渲染商品頁
+  setInterval(() => {
+    loadStocks().then(() => {
+      renderProducts();
+      renderCart(); // 同步更新購物車的庫存狀態
+    });
+  }, 60000);
 })();
