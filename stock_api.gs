@@ -1,14 +1,14 @@
 // ═══════════════════════════════════════════════════════
 //  食麵包 Traveler Bread — Google Apps Script
-//  v４.0  2026-06  新增 action=products 動態商品端點
+//  v5.0  2026-06  改為業者信件為主要寄送
 // ═══════════════════════════════════════════════════════
 
 var SPREADSHEET_ID  = '1-1w0nO8FZQfbBoRt8Fqq2t5LD2cY1_zUY1W2Z09q5ug';
-var PRODUCT_SHEET_ID = '1-1w0nO8FZQfbBoRt8Fqq2t5LD2cY1_zUY1W2Z09q5ug'; // 預定商品工作表所在的 Spreadsheet
+var PRODUCT_SHEET_ID = '1-1w0nO8FZQfbBoRt8Fqq2t5LD2cY1_zUY1W2Z09q5ug'; // 預訂商品工作表所在的 Spreadsheet
 var ORDER_SHEET     = '訂單資料';
 var STOCK_SHEET     = '庫存';
-var PRODUCT_SHEET   = '預定商品';
-var OWNER_EMAILS    = 'lilayanashi@gmail.com, lessarystudio@gmail.com';
+var PRODUCT_SHEET   = '預訂商品';
+var OWNER_EMAILS    = 'lilayanashi@gmail.com, shibread2026@gmail.com';
 
 // ════════════════════════════
 //  GET：路由分派
@@ -74,7 +74,7 @@ function doGet(e) {
 }
 
 // ════════════════════════════
-//  讀取「預定商品」工作表，回傳商品陣列
+//  讀取「預訂商品」工作表，回傳商品陣列
 //
 //  工作表欄位（第 1、2 列為標題列，從第 3 列起是資料）
 //  A: 網站預定更新日期  yyyy/MM/dd HH:mm（業者設定的上架時間）
@@ -93,7 +93,7 @@ function getProducts() {
     var ss    = SpreadsheetApp.openById(PRODUCT_SHEET_ID);
     var sheet = ss.getSheetByName(PRODUCT_SHEET);
     if (!sheet) {
-      return { error: '找不到「預定商品」工作表，請確認工作表名稱是否正確' };
+      return { error: '找不到「預訂商品」工作表，請確認工作表名稱是否正確' };
     }
 
     var now  = new Date();
@@ -194,7 +194,7 @@ function getProducts() {
         badge:       badge,                          // J 欄
         badgeSvg:    badgeSvg,
         image:       imageRaw,                       // K 欄
-        stock:       15,     // 預設值，前端會用 loadStocks() 覆蓋
+        stock:       99,     // 預設值，前端會用 loadStocks() 覆蓋
         featured:    false
       });
     }
@@ -381,7 +381,7 @@ function updateBankCode(d) {
 
 // ════════════════════════════
 //  自動扣庫存（補填末五碼後）
-//  用商品名稱比對「預定商品」工作表 E 欄，取得 D 欄商品 ID，
+//  用商品名稱比對「預訂商品」工作表 E 欄，取得 D 欄商品 ID，
 //  再到「庫存」工作表 A 欄比對，扣除已售數量
 // ════════════════════════════
 function deductStock(body) {
@@ -395,7 +395,7 @@ function deductStock(body) {
   // 第 1 列為標題列，從第 2 列（i=1）起是資料
   var productMap = {};
   for (var i = 1; i < productData.length; i++) {
-    var pId   = String(productData[i][3] || '').trim(); // D 欄：商品ID
+   var pId = (productData[i][3] === 0 || productData[i][3]) ? String(productData[i][3]).trim() : ''; // D 欄：商品ID
     var pName = String(productData[i][4] || '').trim(); // E 欄：商品名稱
     if (pName !== '' && pId !== '') {
       productMap[pName] = pId;
@@ -447,14 +447,14 @@ function sendCustomerConfirmEmail(d) {
     '<p style="margin:0;color:#725752">請於 <b>48 小時內</b> 完成匯款，若在時間內未完成匯款，訂單會被取消，請留意!</p>' +
     '<ul style="margin:8px 0 0;color:#9B7B72;font-size:13px;padding-left:1.2rem;line-height:2">' +
     '<li style="color:#C45131">匯款資訊：星展銀行（810），帳號3125838019</li>' +
-    '<li>匯款後請複製訂單編號，回到食麵包官網補填末五碼，確認後我們會以 Email 或社群帳號通知出貨時間。</li>' +
+    '<li>匯款後請複製訂單編號，回到食麵包官網補填末五碼；我們確認款項後，會以 Email 或社群帳號通知出貨時間。</li>' +
     '<li>若需要更改或取消訂單，請到食麵包 官方Line @shibread 私訊，謝謝。</li>' +
     '</ul>' +
     '</div>' +
-    '<p style="color:#B89891;font-size:12px;margin-top:16px">查詢訂單及填入後五碼，請點選：</p>' +
-    '<p style="font-size:12px;margin-top:4px"><a href="https://www.shibread.com/" style="color:#725752">食麵包 Traveler Bread</a></p>' +
+    '<p style="color:#B89891;font-size:12px;margin-top:16px">查詢訂單及填入後五碼，請點選：<a href="https://www.shibread.com/" style="color:#725752">食麵包 Traveler Bread</a></p>' +
+    '<p style="font-size:12px;margin-top:4px">這是由系統自動發出的電子郵件，請勿回覆此信箱。</p>' +
     '</div>';
-  GmailApp.sendEmail(d.email, subject, '', { htmlBody: html });
+  GmailApp.sendEmail(d.email, subject, '', { htmlBody: html, from: 'lessarystudio@gmail.com', name: '改主寄人 Traveler Bread' });
 }
 
 // ════════════════════════════
@@ -478,9 +478,10 @@ function sendOwnerNewOrderEmail(d) {
     row('總金額',   '<b style="color:#725752">$' + d.total + '</b>') +
     row('備註',     d.note || '—') +
     '</table>' +
-    '<p style="color:#9B7B72;margin-top:12px;font-size:13px">等待客戶匯款，補填末五碼後會再收到付款通知。</p>' +
+    '<p style="color:#9B7B72;margin-top:12px;font-size:16px">等待客戶匯款，補填末五碼後會再收到付款通知。</p>' +
+    '<p style="font-size:12px;margin-top:4px">這是由系統自動發出的電子郵件，請勿回覆此信箱。</p>' +
     '</div>';
-  GmailApp.sendEmail(OWNER_EMAILS, subject, '', { htmlBody: html });
+  GmailApp.sendEmail(OWNER_EMAILS, subject, '', { htmlBody: html, from: 'lessarystudio@gmail.com', name: '改主寄人 Traveler Bread' });
 }
 
 // ════════════════════════════
@@ -505,8 +506,9 @@ function sendOwnerPaymentEmail(d) {
     row('匯款末五碼', '<b style="color:#C0675A;font-size:18px">' + (d.bankCode || '—') + '</b>') +
     row('備註',     d.note || '—') +
     '</table>' +
+    '<p style="font-size:12px;margin-top:4px">這是由系統自動發出的電子郵件，請勿回覆此信箱。</p>' +
     '</div>';
-  GmailApp.sendEmail(OWNER_EMAILS, subject, '', { htmlBody: html });
+  GmailApp.sendEmail(OWNER_EMAILS, subject, '', { htmlBody: html, from:  'lessarystudio@gmail.com', name: '改主寄人 Traveler Bread' });
 }
 
 // ════════════════════════════
@@ -665,12 +667,13 @@ function sendExpiredOrderEmail(d) {
     '若您還需要購買，歡迎回到官網重新訂購：<br>' +
     '<a href="https://www.shibread.com/" style="color:#725752">食麵包 Traveler Bread</a><br>' +
     '若有其他問題，請到官方 Line <b>@shibread</b> 私訊，謝謝。' +
+    '<p style="font-size:12px;margin-top:4px">這是由系統自動發出的電子郵件，請勿回覆此信箱。</p>' +
     '</div>' +
     '</div>';
 
   // 寄給客戶
   try {
-    GmailApp.sendEmail(d.email, subject, '', { htmlBody: html });
+    GmailApp.sendEmail(d.email, subject, '', { htmlBody: html, from:  'lessarystudio@gmail.com', name: '改主寄人 Traveler Bread' });
     Logger.log('逾期通知已寄給客戶：' + d.email);
   } catch(e) {
     Logger.log('寄信給客戶失敗：' + e.message);
@@ -692,7 +695,7 @@ function sendExpiredOrderEmail(d) {
     '</div>';
 
   try {
-    GmailApp.sendEmail(OWNER_EMAILS, ownerSubject, '', { htmlBody: ownerHtml });
+    GmailApp.sendEmail(OWNER_EMAILS, ownerSubject, '', { htmlBody: ownerHtml, from: 'lessarystudio@gmail.com', name: '改主寄人 Traveler Bread'});
     Logger.log('逾期通知已寄給業者');
   } catch(e) {
     Logger.log('寄信給業者失敗：' + e.message);
