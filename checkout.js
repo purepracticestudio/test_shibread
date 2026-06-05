@@ -517,7 +517,7 @@ const isPaid = !!od.bankCode;
           : `<div>付款狀態：<span style="color:var(--warn,#c0675a)">⏳ 待付款</span></div>
              <div>銀行：${BANK_INFO.bank}</div>
              <div>匯款帳號：${BANK_INFO.account}</div>
-             <div>⚠️匯款資料已送出後，系統對帳約需幾分鐘，請稍候再重新搜尋訂單。</div>
+             <div><p style="color:var(--warn,#c0675a)">⚠️匯款資料已送出後，系統對帳約需幾分鐘，請稍候再重新搜尋訂單。</p></div>
              `
         }
       </div>
