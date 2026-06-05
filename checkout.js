@@ -514,9 +514,11 @@ const isPaid = !!od.bankCode;
                付款時間：${od.paidAt || '—'}
              </div>`
              // 付款時間：${od.paidAt} 目前沒有欄位帶入
-          : `<div>付款狀態：<span style="color:var(--warn,#c0675a)">⏳ 待付款 <br> 提示:若已經匯款並完成輸入匯款碼，請過幾分鐘後再重新搜尋訂單。如還有查帳問題，請到 Line 官方帳號<a href="https://line.me/ti/p/~@shibread" target="_blank" class="footer-social-link">@shibread </a> 詢問，謝謝 </span></div>
+          : `<div>付款狀態：<span style="color:var(--warn,#c0675a)">⏳ 待付款</span></div>
              <div>銀行：${BANK_INFO.bank}</div>
-             <div>匯款帳號：${BANK_INFO.account}</div>`
+             <div>匯款帳號：${BANK_INFO.account}</div>
+             <div>⚠️ 若已經匯款並完成輸入匯款碼，請過幾分鐘後再重新搜尋訂單。</div>
+             `
         }
       </div>
 
