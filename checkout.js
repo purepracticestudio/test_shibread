@@ -483,8 +483,8 @@ const isPaid = !!od.bankCode;
     // 計算剩餘天數
     const daysLeft = Math.ceil((od.expireAt - Date.now()) / (1000 * 60 * 60 * 24));
     const expireNote = daysLeft <= 3
-      ? `<span style="color:var(--warn,#c0675a)">⚠️ ⏱ 查詢紀錄將於下單後 14 天或已送貨後，自動清除 </span>`
-      : `⏱ 查詢紀錄將於下單後 14 天或已送貨後，自動清除`;
+      ? `<span style="color:var(--warn,#c0675a)">⚠️ ⏱ 查詢紀錄將於下單後 14 天或收到貨後，自動清除 </span>`
+      : `⏱ 查詢紀錄將於下單後 14 天或收到貨後，自動清除`;
 
     body.innerHTML = `
       <div style="text-align:center;margin-bottom:1.5rem">
@@ -514,7 +514,7 @@ const isPaid = !!od.bankCode;
                付款時間：${od.paidAt || '—'}
              </div>`
              // 付款時間：${od.paidAt} 目前沒有欄位帶入
-          : `<div>付款狀態：<span style="color:var(--warn,#c0675a)">⏳ 待付款</span></div>
+          : `<div>付款狀態：<span style="color:var(--warn,#c0675a)">⏳ 待付款 (若有輸入過匯款碼，請過幾分鐘後重新搜尋，謝謝) </span></div>
              <div>銀行：${BANK_INFO.bank}</div>
              <div>匯款帳號：${BANK_INFO.account}</div>`
         }
@@ -530,7 +530,7 @@ const isPaid = !!od.bankCode;
         ? `<!-- 已付款：不需再填 -->
            <div style="text-align:center;padding:0.5rem 0 1rem">
              <p style="font-size:0.82rem;color:var(--mid);line-height:1.9;margin-bottom:1.2rem">
-               末五碼已送出，我確認後我們會以 Email 或 社群帳號 通知出貨時間
+               末五碼已送出，我們確認款項後，會以 Email 或 社群帳號 通知出貨時間
              </p>
              <button class="btn-next" style="padding:0.75rem 2rem" onclick="closeLookup()">關閉</button>
            </div>`
