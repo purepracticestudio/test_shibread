@@ -3,7 +3,7 @@
 // App Script 已改放業者Mail
 // ═══════════════════════════════════════════════════════
 
-const STOCK_API_URL = 'https://script.google.com/macros/s/AKfycbzz32WTh3MpVag8vzb5iv7oDBr5BK7cxFMZGm_v8-7G/dev';
+const STOCK_API_URL = 'https://script.google.com/macros/s/AKfycbzV3oyVSh6rMGcuach79dSDKwdtfzmHEhJq3Ob4ngefgk4-e_vJXD4AXqN7NnRRfGO7GQ/exec';
 
 // 全域商品陣列（cart.js 也會使用這個陣列）
 let PRODUCTS = [];
