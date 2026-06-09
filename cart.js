@@ -6,7 +6,7 @@
 const SHIPPING_FEES = {
   local_delivery: 0,
   pickup:         0,
-  seven:          129,
+  seven:          225,
 };
 
 // ── 最少訂購數量 ──
@@ -133,7 +133,7 @@ function getShippingLabel(method) {
   const labels = {
     local_delivery: '送貨到府（限新竹）',
     pickup:         '自取（竹北東興國小）',
-    seven:          '7-11 冷凍店到店',
+    seven:          '黑貓宅配 - 低溫冷凍',
   };
   return labels[method] || method;
 }

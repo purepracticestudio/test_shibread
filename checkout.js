@@ -28,7 +28,7 @@ function getShippingLabel(method) {
   const labels = {
     local_delivery: '送貨到府（限新竹）',
     pickup:         '自取（竹北東興國小）',
-    seven:          '7-11 冷凍店到店',
+    seven:          '黑貓宅配 - 低溫冷凍',
   };
   return labels[method] || method;
 }
@@ -131,7 +131,7 @@ function renderCheckoutStep() {
             <input type="radio" name="ship" value="local_delivery" ${sm === 'local_delivery' ? 'checked' : ''}>
             <div class="rot">
               <strong>🛵 送貨到府（免運費）</strong>
-              <small>限新竹區域，出貨時間另行通知</small>
+              <p>限新竹區域，出貨時間另行通知</p>
             </div>
           </label>
           <label class="radio-opt ${sm === 'pickup' ? 'selected' : ''}"
@@ -139,15 +139,15 @@ function renderCheckoutStep() {
             <input type="radio" name="ship" value="pickup" ${sm === 'pickup' ? 'checked' : ''}>
             <div class="rot">
               <strong>🏫 自取（竹北東興國小）</strong>
-              <small>取件時間另行通知</small>
+              <p>取件時間另行通知</p>
             </div>
           </label>
           <label class="radio-opt ${sm === 'seven' ? 'selected' : ''}"
             onclick="selectShipping(this, 'seven')">
             <input type="radio" name="ship" value="seven" ${sm === 'seven' ? 'checked' : ''}>
             <div class="rot">
-              <strong>🏪 7-11 冷凍店到店（+$129）</strong>
-              <small>外縣市適用 · 僅限已付款取件 · 無貨到付款</small>
+              <strong>🚚 黑貓宅配 - 低溫冷凍（+$225）</strong>
+              <p>外縣市適用 · 僅限已付款取件 · 無貨到付款</p>
             </div>
           </label>
         </div>
@@ -158,17 +158,14 @@ function renderCheckoutStep() {
         <div class="form-err" id="ea">請填寫新竹收件地址</div>
       </div>
       <div class="form-group" id="sevenGrp" style="${sm === 'seven' ? '' : 'display:none'}">
-        <label>7-11 取件店名及地址 <span class="req">*</span></label>
-        <input class="form-input" id="fss" placeholder="例如:竹陵店新竹市北區東大路二段174號"
+        <label>收件地址 <span class="req">*</span></label>
+        <input class="form-input" id="fss" placeholder="全台本島的收件地址"
           value="${formData.sevenStore || ''}">
-        <div class="form-note">
-          <a href="https://emap.pcsc.com.tw/emap.aspx" target="_blank"
-            style="color:var(--primary);text-decoration:underline">🔍 查詢 7-11 門市與地址</a>
-        </div>
+
         <div class="form-note" style="color:#c0675a;margin-top:0.3rem">
-          ⚠️ 注意事項: <br>1.冷凍店到店需付款後才可取件，無貨到付款 <br> 2.請直接輸入店名及地址，勿複製貼上含有特殊符號的文字
+          ⚠️ 注意事項: <br>1.無貨到付款 <br> 2.台灣本島寄送，離島不計送。
         </div>
-        <div class="form-err" id="ess">請填寫 7-11 取件店名及地址</div>
+        <div class="form-err" id="ess">請填寫 黑貓宅配名及地址</div>
       </div>
       <div class="form-group">
         <label>備註 / 特殊需求</label>
@@ -252,7 +249,7 @@ function renderCheckoutStep() {
         <div>Email：${formData.email}</div>
         <div>取貨方式：${shipLabel}</div>
         ${formData.ship === 'local_delivery' ? `<div>地址：${formData.address}</div>` : ''}
-        ${formData.ship === 'seven' ? `<div>7-11 取件店：${formData.sevenStore}</div>` : ''}
+        ${formData.ship === 'seven' ? `<div>黑貓宅配：${formData.sevenStore}</div>` : ''}
         ${formData.note ? `<div>備註：${formData.note}</div>` : ''}
           <div style="margin-top:0.4rem;padding-top:0.4rem;border-top:1px solid rgba(227,181,164,0.3)">
           <div style="color:var(--primary);font-weight:600;margin-bottom:0.2rem">社群聯繫</div>
@@ -344,7 +341,7 @@ function renderCheckoutStep() {
         · 確認信已寄至您的 Email，信中含訂單編號與匯款帳號<br>
         · 請於 48 小時內完成匯款並補填末五碼<br>
         · 訂單查詢紀錄會於 <strong>到貨後</strong>和<strong>14天後</strong>自動清除，請盡早完成匯款<br>
-        ${formData.ship === 'seven' ? '· 7-11 冷凍店到店僅限已付款取件，無貨到付款<br>' : ''}
+        ${formData.ship === 'seven' ? '· 黑貓宅配-低溫冷凍僅限已付款取件，無貨到付款<br>' : ''}
         · 如有疑問請到 Line 官方帳號 <a href="https://line.me/ti/p/~@shibread" target="_blank" class="footer-social-link">@shibread </a> 詢問
       </div>`;
     return;
@@ -365,7 +362,7 @@ function renderCheckoutStep() {
           確認款項後將以 <strong style="color:var(--primary)">Email或社群帳號</strong> 通知您出貨時間<br>
           感謝支持食麵包的每一顆手工麵包 ♡
         </p>
-        <div style="background:rgba(227,181,164,0.12);border-left:3px solid var(--accent);padding:0.65rem 1rem;margin:1.2rem 0;font-size:0.74rem;color:var(--light-text);line-height:1.9;text-align:left">
+        <div style="background:rgba(227,181,164,0.12);border-left:3px solid var(--accent);padding:0.65rem 1rem;margin:1.2rem 0;font-size:0.8rem;color:var(--light-text);line-height:1.9;text-align:left">
           ⏱ 訂單查詢紀錄會於 <strong>到貨後</strong>和<strong style="color:var(--mid)">${expireDate}</strong> 自動清除（下單後 14 天）<br>
           到期前可透過「查詢訂單」確認付款狀態<br>
           如有疑問請到 Line 官方帳號 <a href="https://line.me/ti/p/~@shibread" target="_blank" class="footer-social-link">@shibread </a> 詢問
@@ -523,7 +520,7 @@ const isPaid = !!od.bankCode;
       </div>
 
       <!-- 到期提示 -->
-      <div style="background:rgba(227,181,164,0.12);border-left:3px solid var(--accent);padding:0.65rem 1rem;margin-bottom:1.2rem;font-size:0.74rem;color:var(--primary);line-height:1.8">
+      <div style="background:rgba(227,181,164,0.12);border-left:3px solid var(--accent);padding:0.65rem 1rem;margin-bottom:1.2rem;font-size:0.8rem;color:var(--primary);line-height:1.8">
         ${expireNote}<br>
         如有疑問請到 Line 官方帳號<a href="https://line.me/ti/p/~@shibread" target="_blank" class="footer-social-link">@shibread </a> 詢問
       </div>
@@ -724,7 +721,7 @@ function validateStep1() {
   if (!/^09\d{8}$/.test(phone))                      { showErr('ep',  true, '請填寫有效電話');            ok = false; } else { showErr('ep',  false); }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))    { showErr('ee',  true, '請填寫有效 Email');          ok = false; } else { showErr('ee',  false); }
   if (ship === 'local_delivery' && !addr)             { showErr('ea',  true, '請填寫新竹收件地址');         ok = false; } else { showErr('ea',  false); }
-  if (ship === 'seven' && !seven)                     { showErr('ess', true, '請填寫 7-11 取件店名及地址'); ok = false; } else { showErr('ess', false); }
+  if (ship === 'seven' && !seven)                     { showErr('ess', true, '請填寫 黑貓宅配地址'); ok = false; } else { showErr('ess', false); }
   showErr('e-social', false);//不必填寫
   //if (!socialPlatform || !socialId)                  { showErr('e-social', true, '請選擇並填寫社群帳號'); ok = false; } else { showErr('e-social', false); }
 
@@ -921,7 +918,7 @@ function sendBankCodeNotify(order) {
   const shipLabels = {
     local_delivery: '送貨到府（限新竹）',
     pickup:         '自取（竹北東興國小）',
-    seven:          '7-11 冷凍店到店',
+    seven:          '黑貓宅配 - 低溫冷凍',
   };
   let shipDetail = shipLabels[order.ship] || order.ship;
   if (order.ship === 'local_delivery' && order.address) shipDetail += '（' + order.address + '）';
