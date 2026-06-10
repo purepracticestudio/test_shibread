@@ -513,6 +513,15 @@ textarea.form-input { resize: vertical; min-height: 78px; }
 .mobile-menu a:last-child { border-bottom: none; }
 .mobile-menu a:hover { background: var(--cream); color: var(--primary); }
 
+
+@media (min-width: 1025px) {
+  .footer-info p { /*footer PRODUCTS*/
+    columns: 2;  /*多品項的改法    columns: 3;*/
+    column-gap: 2rem; /*多品項的改法  column-gap: 1.5rem;*/
+  }
+}
+
+
 @media (max-width: 960px) {
   /* Nav */
   nav { padding: 0 16px; }

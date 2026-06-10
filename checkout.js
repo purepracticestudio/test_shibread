@@ -161,11 +161,11 @@ function renderCheckoutStep() {
         <label>收件地址 <span class="req">*</span></label>
         <input class="form-input" id="fss" placeholder="全台本島的收件地址"
           value="${formData.sevenStore || ''}">
-
-        <div class="form-note" style="color:#c0675a;margin-top:0.3rem">
+       <div class="form-err" id="ess">請填寫 黑貓宅配名及地址</div>
+        <div class="form-note" style="color:#623E3B;margin-top:0.3rem">
           ⚠️ 注意事項: <br>1.無貨到付款 <br> 2.台灣本島寄送，離島不計送。
         </div>
-        <div class="form-err" id="ess">請填寫 黑貓宅配名及地址</div>
+        
       </div>
       <div class="form-group">
         <label>備註 / 特殊需求</label>
@@ -216,9 +216,11 @@ function renderCheckoutStep() {
         <div class="form-err" id="e-social">請選擇並填寫社群帳號</div>
       </div>
 
+
       <div class="modal-nav">
         <button class="btn-next btn-full" onclick="validateStep1()">下一步：確認訂單 →</button>
-      </div>`;
+      </div>
+      <div class="form-err" id="btn-err" style="text-align:left;margin-top:0.4rem"></div>`;
     return;
   }
 
@@ -426,8 +428,9 @@ function renderLookupStep(step) {
       <div class="form-group">
         <label>Email 或電話 <span class="req">*</span>（擇一填寫）</label>
         <input class="form-input" id="lk-contact" placeholder="your@email.com 或 09xxxxxxxx">
-        <div class="form-note">請填寫下單時使用的 Email 或電話</div>
         <div class="form-err" id="lk-err-contact">請填寫 Email 或電話</div>
+        <div class="form-note">請填寫下單時使用的 Email 或電話</div>
+  
       </div>
       <div class="modal-nav">
         <button class="btn-back" onclick="closeLookup()">取消</button>
@@ -701,8 +704,26 @@ function showErr(id, show, msg) {
   if (!el) return;
   el.classList.toggle('show', show);
   if (msg) el.textContent = msg;
-}
 
+  // 同步在對應的 input 加上紅框
+  const inputMap = {
+    'en':       'fn',
+    'ep':       'fp',
+    'ee':       'fe',
+    'ea':       'fa',
+    'ess':      'fss',
+    'e-social': 'val-social',
+    'ebc':      'fbc',
+    'lk-err-order':   'lk-order',
+    'lk-err-contact': 'lk-contact',
+    'lk-err-bank':    'lk-bankcode',
+  };
+  const inputId = inputMap[id];
+  if (inputId) {
+    const input = document.getElementById(inputId);
+    if (input) input.classList.toggle('err', show);
+  }
+}
 function validateStep1() {
   const name  = document.getElementById('fn').value.trim();
   const phone = document.getElementById('fp').value.trim().replace(/[-\s]/g, '');
@@ -711,11 +732,12 @@ function validateStep1() {
   const addr  = (document.getElementById('fa')?.value || '').replace(/[\t\r\n]+/g, ' ').trim();
   const seven = (document.getElementById('fss')?.value || '').replace(/[\t\r\n]+/g, ' ').trim();
   const note  = document.getElementById('fno').value.trim();
+  
 
   // 社群帳號（單選）
   const socialPlatform = document.querySelector('input[name="social"]:checked')?.value || '';
   const socialId       = document.getElementById('val-social')?.value.trim().replace(/^@/, '') || '';
-
+  showErr('btn-err', false);
   let ok = true;
   if (!name)                                          { showErr('en',  true, '請填寫姓名');               ok = false; } else { showErr('en',  false); }
   if (!/^09\d{8}$/.test(phone))                      { showErr('ep',  true, '請填寫有效電話');            ok = false; } else { showErr('ep',  false); }
@@ -725,6 +747,10 @@ function validateStep1() {
   showErr('e-social', false);//不必填寫
   //if (!socialPlatform || !socialId)                  { showErr('e-social', true, '請選擇並填寫社群帳號'); ok = false; } else { showErr('e-social', false); }
 
+ if (!ok) {
+    showErr('btn-err', true, '＊ 請填寫所有必填欄位');
+    return;
+  }
 
   if (ok) {
     formData = {
@@ -858,7 +884,7 @@ function sendOrderCreatedNotify() {
     phone:   formData.phone,
     email:   formData.email,
     ship:    shipDetail,
-    note:    formData.note || '—',
+    note:    (formData.note || '—').replace(/[\n\r\t]/g, ' '),
     total:   tot,
     cart:    cart.map(i => `${i.name} x${i.qty} = $${i.price * i.qty}`).join('、'),
     social:  socialText,
