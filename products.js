@@ -1,9 +1,9 @@
 // ═══════════════════════════════════════════════════════
-// products.js — 動態商品載入 v2.2  2026-06
-// App Script 放假的業者內容
+// products.js — 動態商品載入 v6.0 2026-06
+// App Script 放業者內容
 // ═══════════════════════════════════════════════════════
 
-const STOCK_API_URL = 'https://script.google.com/macros/s/AKfycbzqzF3CxTA4zHp9uqiAkvpl2ettf-i5ysc0O4HJowMWbWyNJzo8qyhvsxB_LsOQSJd4Ig/exec';
+const STOCK_API_URL = 'https://script.google.com/macros/s/AKfycbyuzaskxdJxXyBR-AThxPGRkXiVUtzc7SShFT8j0MSG9MMHtgA1EMJclboyz_T5lq3hQA/exec';
 
 // 全域商品陣列（cart.js 也會使用這個陣列）
 let PRODUCTS = [];
