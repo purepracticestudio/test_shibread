@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════
-   style.css — 食麵包 Traveler Bread 網站樣式
+   style.css — 食麵包 Traveler Bread 網站樣式20260624_5
    ═══════════════════════════════════════ */
 
 /* ── 設計變數 ── */
@@ -12,16 +12,36 @@
   --mid:        #623E3B;/*#9B7B72*/
   --light-text: #b47d6d;/*#B89891*/
   --white:      #FFFDF9;
+  --safe-top: env(safe-area-inset-top);
+  --nav-height: 64px;
 }
+
 
 /* ── Reset & Base ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { 
+  scroll-behavior: smooth; 
+  -webkit-text-size-adjust: 100%;
+}
 body {
   font-family: 'Noto Serif TC', serif;
-  background: var(--warm-bg);
   color: var(--dark);
   overflow-x: hidden;
+  min-height: 100%;
+  background: var(--warm-bg);
+  overscroll-behavior: none;
+  /* fixed nav 補償：讓頁面內容不被 nav 遮住 */
+  padding-top: calc(var(--nav-height) + env(safe-area-inset-top));
+}
+/*這些元素是操作元件，不需要雙擊縮放。*/
+button,
+a,
+.cart-btn,
+.lookup-trigger,
+.checkout-btn,
+.hero-cta,
+.add-to-cart {
+  touch-action: manipulation;
 }
 
 /* 紙紋底色 */
@@ -35,16 +55,22 @@ body::before {
 }
 
 /* ════════════════════════════
-   NAV
+   NAV — position:fixed 解決 iOS Safari 狀態列透明問題
+   （sticky + status-cover div 在滾動時會因 safe-area-inset-top 縮小而露底）
 ════════════════════════════ */
 nav {
-  position: fixed; top: 0; width: 100%; z-index: 200;
-  padding: 0 2.5rem; height: 64px;
-  display: flex; align-items: center; justify-content: space-between;
-  background: rgba(250,246,241,0.92);
-  backdrop-filter: blur(12px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--nav-height) + env(safe-area-inset-top));
+  padding: env(safe-area-inset-top) 2.5rem 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FAF6F1;
   border-bottom: 1px solid rgba(114,87,82,0.12);
-  transition: border-color 0.3s;
 }
 .nav-logo {
   font-family: 'Noto Serif TC', serif;
@@ -92,9 +118,9 @@ nav {
    HERO
 ════════════════════════════ */
 .hero {
-  min-height: 100vh; display: grid;
+  min-height: 100dvh; display: grid;
   grid-template-columns: 1fr 1fr;
-  padding-top: 64px; overflow: hidden;
+  overflow: hidden;
 }
 .hero-left {
   display: flex; flex-direction: column; justify-content: center;
@@ -153,7 +179,7 @@ nav {
 /* ════════════════════════════
    SECTIONS COMMON
 ════════════════════════════ */
-section { padding: 7rem 0; }
+section { padding: 2rem 0; }
 .section-header { text-align: center; margin-bottom: 4rem; }
 .section-en {
   font-family: 'IM Fell English', serif; font-style: italic;
@@ -207,7 +233,8 @@ section { padding: 7rem 0; }
 .product-card--featured { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; }
 .product-card--featured .product-img { height: 100%; min-height: 350px; }
 
-.product-img { height: 300px; overflow: hidden; position: relative; background: var(--cream); }
+.product-img { overflow: visible; position: relative; background: var(--cream); }
+.product-photo { width: 100%; height: auto; display: block; }
 .bread-illustration { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
 .product-body { padding: 2rem; display: flex; flex-direction: column; gap: 0.7rem; }
 .product-tag { font-family: 'IBM Plex Serif', serif; font-style: italic; font-size: 0.8rem; color: var(--mid); letter-spacing: 0.2em; }
@@ -243,7 +270,7 @@ section { padding: 7rem 0; }
 /* ════════════════════════════
    PHILOSOPHY
 ════════════════════════════ */
-.philosophy { background: var(--cream); padding: 7rem 2rem; }
+.philosophy { background: var(--cream); padding: 2rem 2rem; }
 .philosophy-inner { max-width: 1000px; margin: 0 auto; }
 .philosophy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; margin-top: 4rem; }
 .philosophy-item { text-align: center; padding: 2.5rem 1.5rem; background: var(--white); border-top: 2px solid var(--light-text); }
@@ -270,22 +297,65 @@ footer { background: var(--dark); padding: 4rem 2rem 2rem; color: rgba(255,255,2
 .footer-bottom { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; font-size: 0.8rem; }
 
 /* ════════════════════════════
-   CART DRAWER
+   CART DRAWER — iPhone Safe Area 穩定版
 ════════════════════════════ */
-.cart-overlay {
-  position: fixed; inset: 0; background: rgba(30,15,10,0.45);
-  z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s;
-}
-.cart-overlay.open { opacity: 1; pointer-events: all; }
 
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* 購物車背景遮罩 */
+.cart-overlay {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  width: 100vw;
+  height: 100dvh;
+
+  background: rgba(30,15,10,0.55);
+  z-index: 9100;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.cart-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* 購物車側邊欄 */
 .cart-drawer {
-  position: fixed; top: 0; right: 0; bottom: 0;
-  width: 420px; max-width: 95vw; background: var(--white);
-  z-index: 301; transform: translateX(100%);
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+
+  width: 420px;
+  max-width: 95vw;
+  height: 100dvh;
+
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
+
+  background: var(--white);
+  z-index: 9101;
+
+  transform: translateX(100%);
   transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-  display: flex; flex-direction: column;
+
+  display: flex;
+  flex-direction: column;
+
   box-shadow: -8px 0 40px rgba(60,30,20,0.15);
 }
+
+
 .cart-drawer.open { transform: translateX(0); }
 .cart-header {
   padding: 1.5rem 1.8rem; border-bottom: 1px solid rgba(227,181,164,0.3);
@@ -325,12 +395,22 @@ footer { background: var(--dark); padding: 4rem 2rem 2rem; color: rgba(255,255,2
 .checkout-btn { width: 100%; background: var(--primary); color: var(--white); border: none; padding: 1rem; font-family: 'Noto Serif TC', serif; font-size: 0.88rem; letter-spacing: 0.15em; cursor: pointer; transition: background 0.2s; }
 .checkout-btn:hover { background: var(--dark); }
 
+
+/* 開啟購物車時，鎖住背景滾動 */
+body.lock-scroll {
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
+  touch-action: none;
+}
+
+
 /* ════════════════════════════
    CHECKOUT MODAL
 ════════════════════════════ */
 .modal-overlay {
   position: fixed; inset: 0; background: rgba(30,15,10,0.55);
-  z-index: 400; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  z-index: 9200; opacity: 0; pointer-events: none; transition: opacity 0.3s;
   display: flex; align-items: center; justify-content: center; padding: 1rem;
 }
 .modal-overlay.open { opacity: 1; pointer-events: all; }
@@ -493,7 +573,7 @@ textarea.form-input { resize: vertical; min-height: 78px; }
 .mobile-menu {
   display: none;
   position: fixed;
-  top: 64px; left: 0; right: 0;
+  top: calc(var(--nav-height) + var(--safe-top)); left: 0; right: 0;
   background: rgba(250,246,241,0.98);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(114,87,82,0.15);
@@ -637,7 +717,7 @@ textarea.form-input { resize: vertical; min-height: 78px; }
 .lookup-overlay {
   position: fixed; inset: 0;
   background: rgba(30,15,10,0.55);
-  z-index: 400; opacity: 0; pointer-events: none;
+  z-index: 9300; opacity: 0; pointer-events: none;
   transition: opacity 0.3s;
   display: flex; align-items: center; justify-content: center; padding: 1rem;
 }
@@ -812,7 +892,7 @@ textarea.form-input { resize: vertical; min-height: 78px; }
 ════════════════════════════ */
 .lookup-overlay {
   position: fixed; inset: 0; background: rgba(30,15,10,0.55);
-  z-index: 400; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  z-index: 9300; opacity: 0; pointer-events: none; transition: opacity 0.3s;
   display: flex; align-items: center; justify-content: center; padding: 1rem;
 }
 .lookup-overlay.open { opacity: 1; pointer-events: all; }
@@ -976,6 +1056,8 @@ textarea.form-input { resize: vertical; min-height: 78px; }
 /* ════════════════════════════
    購物車商品列（緊湊版）
 ════════════════════════════ */
+
+
 .cart-item {
   display: flex;
   align-items: center;

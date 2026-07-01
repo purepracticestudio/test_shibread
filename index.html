@@ -2,17 +2,19 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#FAF6F1">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>食麵包 Traveler Bread — 手感酸種麵包</title>
   <link rel="icon" type="image/jpeg" href="images/img_logo.jpg">
   <link rel="apple-touch-icon" href="images/img_logo.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600&family=Shippori+Mincho:wght@400;500;600&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?0506_v3">
+  <link rel="stylesheet" href="style.css?260624_v5">
 
    <!-- ════ SEO 基礎 ════ -->
   <title>食麵包 Traveler Bread｜新竹手感酸種麵包預訂</title>
-  <meta name="robots" content="noindex"><!--需要合作會開啟-->
+  <!-- <meta name="robots" content="noindex"> 下架間後使用 不搜尋-->
   <meta name="description" content="食麵包 Traveler Bread，新竹在地手工酸種麵包。天然魯邦種長時間低溫發酵，舊金山酸種、純鮮奶洛斯提克、黑芝麻酸種、瑪格麗特法國、亞麻籽蔓越莓酸種麵包，每批限量預訂。">
   <meta name="keywords" content="食麵包,酸種麵包,sourdough,新竹麵包,手工麵包,魯邦種,Traveler Bread,天然酵母,預訂麵包">
   <meta name="author" content="食麵包 Traveler Bread">
@@ -20,7 +22,6 @@
 
 </head>
 <body>
-
   <!-- ════ NAV ════ -->
   <nav id="mainNav">
     <a href="#" class="nav-logo">
@@ -99,7 +100,7 @@
     <div class="hero-right">
       <div class="hero-img-wrap">
         <!-- Hero 封面圖片 -->
-        <img src="images/img_cover.png" alt="食麵包手工酸種麵包" class="hero-cover-img">
+        <img src="images/img_cover.jpg" alt="食麵包手工酸種麵包" class="hero-cover-img">
         <div class="hero-img-overlay"></div>
       </div>
     </div>
@@ -205,7 +206,7 @@
   </section>
 
   <!-- ════ ORDER INFO ════ -->
-  <section style="background:var(--primary);padding:5rem 2rem;text-align:center;position:relative;overflow:hidden;" id="order-sec">
+  <section style="background:var(--primary);padding:2rem 2rem;text-align:center;position:relative;overflow:hidden;" id="order-sec">
     <span style="font-family:'IM Fell English',serif;font-style:italic;font-size:0.82rem;color:var(--light-text);letter-spacing:0.25em;display:block;margin-bottom:1rem;">how to order</span>
     <h2 style="font-family:'Shippori Mincho',serif;font-size:2rem;color:#FFFDF9;margin-bottom:1rem;font-weight:500;">訂購說明</h2>
     <p style="font-size:0.88rem;color:rgba(255,255,255,0.65);line-height:2.5;margin-bottom:2.5rem;max-width:540px;margin-left:auto;margin-right:auto;">  每批限量手工製作唷 🍞<br>
@@ -231,7 +232,8 @@
           <small>Traveler Bread</small>
         </p>
         <p class="footer-slogan">用時間與溫度，<br>為你烘烤每一顆有溫度的麵包。</p>
-
+        <p class="footer-slogan">統編：61344262（免開統一發票）<br>保產品責任險：國泰世紀產物保險</p>
+        
         <!-- 社群連結 -->
         <div class="footer-social" id="footer-social">
           <a href="https://line.me/ti/p/~@shibread" target="_blank" class="footer-social-link">
@@ -322,9 +324,9 @@
   </div>
 
   <!-- ════ JavaScript ════ -->
-  <script src="products.js?0601_v5"></script>
-  <script src="cart.js?0506_v2"></script>
-  <script src="checkout.js?0601_v1"></script>
+  <script src="products.js"></script>
+  <script src="cart.js"></script>
+  <script src="checkout.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
       await loadStocks();   // 先從 Google Sheets 讀庫存
