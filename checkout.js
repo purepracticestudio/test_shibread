@@ -13,8 +13,8 @@ const BANK_INFO = {
 };
 
 // ── Make.com Webhook 網址 ──
-const MAKE_WEBHOOK_URL      = 'https://hook.eu1.make.com/vvlzl4dslrov7wi6if5e7rts2gugo8eu';
-const MAKE_BANKCODE_WEBHOOK = 'https://hook.eu1.make.com/vvlzl4dslrov7wi6if5e7rts2gugo8eu'; // 可設定獨立 Webhook
+const MAKE_WEBHOOK_URL      = 'https://hook.us2.make.com/k1ai7r8ax1qfg1n32nry3xllvv89p3cs';
+const MAKE_BANKCODE_WEBHOOK = 'https://hook.us2.make.com/k1ai7r8ax1qfg1n32nry3xllvv89p3cs'; // 可設定獨立 Webhook
 
 // ── Secret Token（需與 Apps Script 的 SECRET_TOKEN 一致）──
 const SECRET_TOKEN = 'SB-BREAD-2025'; // ← 與 stock_api.gs 保持相同
