@@ -1,7 +1,8 @@
 // ═══════════════════════════════════════
 //  checkout.js — 結帳流程 & 訂單通知
 //  通知方式：Make.com Webhook → Resend Email
-//  v4：多種取貨方式 + 下單後補填末五碼 + 14天到期查詢 + 已付款狀態顯示
+//  v7.0 N顆1組設置標籤 2026.07.23
+
 // ═══════════════════════════════════════
 
 // ── 匯款資訊（請替換成真實帳號）──
@@ -12,9 +13,19 @@ const BANK_INFO = {
   holder:  '林文怡',      // ← 替換成戶名
 };
 
+// ── 清洗使用者輸入文字：移除控制字元 / 表情符號 / 特殊符號，避免傳給 Make 時破壞 JSON ──
+function sanitizeText(str) {
+  if (!str) return str;
+  return str
+    .replace(/[\u0000-\u001F\u007F]/g, ' ')                 // 控制字元（換行、Tab等）
+    .replace(/\p{Extended_Pictographic}/gu, '')             // 表情符號 Emoji
+    .replace(/[\u200D\uFE0F\uFE0E]/g, '')                   // 零寬連字符 / 變化符號
+    .trim();
+}
+
 // ── Make.com Webhook 網址 ──
-const MAKE_WEBHOOK_URL      = 'https://hook.us2.make.com/k1ai7r8ax1qfg1n32nry3xllvv89p3cs';
-const MAKE_BANKCODE_WEBHOOK = 'https://hook.us2.make.com/k1ai7r8ax1qfg1n32nry3xllvv89p3cs'; // 可設定獨立 Webhook
+const MAKE_WEBHOOK_URL      = 'https://hook.eu1.make.com/vvlzl4dslrov7wi6if5e7rts2gugo8eu';
+const MAKE_BANKCODE_WEBHOOK = 'https://hook.eu1.make.com/vvlzl4dslrov7wi6if5e7rts2gugo8eu'; // 可設定獨立 Webhook
 
 // ── Secret Token（需與 Apps Script 的 SECRET_TOKEN 一致）──
 const SECRET_TOKEN = 'SB-BREAD-2025'; // ← 與 stock_api.gs 保持相同
@@ -102,10 +113,10 @@ function renderCheckoutStep() {
   // ── 步驟 1：填寫資料 ──
  if (checkoutStep === 1) {
     body.innerHTML = stepsBarHTML() + `
-      <div style="background:#FFF8F0;border-left:3px solid #E3B5A4;padding:0.7rem 1rem;margin-bottom:1.2rem;font-size:0.78rem;color:#9B7B72;line-height:1.8">
-        ⚠️ 請使用半形文字填寫（英文、數字請使用一般鍵盤輸入），避免使用全形字或特殊符號，以免影響訂單處理，建議直接手動輸入。
+     <div style="background:#FFF8F0;border-left:3px solid #E3B5A4;padding:0.7rem 1rem;margin-bottom:1.2rem;font-size:0.9rem;color:#9B7B72;line-height:1.8">
+        ⚠️ 請使用半形文字填寫（英文、數字請使用一般鍵盤輸入），避免使用全形字或特殊符號，以免影響訂單處理，建議直接手動輸入。<br>
+        📧 建議優先使用個人信箱（例如 Gmail、Yahoo、Outlook、iCloud 等）下單，以避免企業信箱攔截確認信。
       </div>
-
       <div class="form-group">
         <label>姓名 <span class="req">*</span></label>
         <input class="form-input" id="fn" placeholder="請輸入姓名" value="${formData.name || ''}">
@@ -884,7 +895,7 @@ function sendOrderCreatedNotify() {
     phone:   formData.phone,
     email:   formData.email,
     ship:    shipDetail,
-    note:    (formData.note || '—').replace(/[\n\r\t]/g, ' '),
+     note:    sanitizeText(formData.note) || '—',
     total:   tot,
     cart:    cart.map(i => `${i.name} x${i.qty} = $${i.price * i.qty}`).join('、'),
     social:  socialText,
@@ -963,7 +974,7 @@ function sendBankCodeNotify(order) {
       ship:     shipDetail,
       address:  order.address,
       bankCode: order.bankCode,
-      note:     order.note,
+      note:     sanitizeText(order.note) || '—',
       total:    order.total,
       cart:     order.cart,
       social:   order.social || '—',

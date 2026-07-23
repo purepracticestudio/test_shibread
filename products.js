@@ -1,9 +1,9 @@
 // ═══════════════════════════════════════════════════════
-// products.js — 動態商品載入 v6.0 2026-06
-// App Script 放業者內容
+// products.js — 動態商品載入 v7.0 N顆1組設置標籤 2026.07.23
+// App Script 標籤新增2顆1組
 // ═══════════════════════════════════════════════════════
 
-const STOCK_API_URL = 'https://script.google.com/macros/s/AKfycbxml1mOlrXuOjmkcblFVdE2du92A-Z2jf8LBZTeevBrqhavcHDzG8q08m9jpWsQIhZIvA/exec';
+const STOCK_API_URL = 'https://script.google.com/macros/s/AKfycbwKYw7a7qJzOUPi0673wy-uWkkv3BWzYxc8oMqGUSwrSBobFyPhDNCG2Z4IzY1fGJpCGw/exec';
 
 // 全域商品陣列（cart.js 也會使用這個陣列）
 let PRODUCTS = [];
@@ -134,10 +134,11 @@ function renderProducts() {
     const isSoldOut = stock <= 0;
     const isLow     = stock > 0 && stock <= 3;
 
+    const unit = p.bundleQty > 0 ? '組' : '顆';
     const stockBadge = isSoldOut
       ? `<div class="stock-badge stock-badge--out">已售完</div>`
       : isLow
-        ? `<div class="stock-badge stock-badge--low">⚡ 僅剩 ${stock} 顆</div>`
+        ? `<div class="stock-badge stock-badge--low">⚡ 僅剩 ${stock} ${unit}</div>`
         : '';
 
     const badgeHTML = p.badgeSvg
@@ -152,9 +153,11 @@ function renderProducts() {
                font-size="5.5" fill="rgba(255,255,255,0.9)" letter-spacing="1">新 品</text>
            </svg>
          </div>`
-      : p.badge
-        ? `<div class="product-badge">${p.badge}</div>`
-        : '';
+      : p.bundleQty > 0
+        ? `<div class="product-badge">${p.bundleQty}顆1組</div>`
+        : p.badge
+          ? `<div class="product-badge">${p.badge}</div>`
+          : '';
 
     const imgHTML = p.image
       ? `<img src="${p.image}" alt="${p.name}" class="product-photo" loading="lazy">`
@@ -188,7 +191,7 @@ function renderProducts() {
         <div class="product-body">
           <p class="product-tag">${p.tag}</p>
           <h3 class="product-name">${p.name}</h3>
-          <p class="product-price">$${p.price} <small>/ 顆</small></p>
+          <p class="product-price">$${p.price} <small>${p.bundleQty > 0 ? '/ 組' : '/ 顆'}</small>${p.bundleQty > 0 ? ` <span style="color:#c0675a;font-size:0.75rem;font-weight:600">${p.bundleQty}顆1組（不單顆賣）</span>` : ''}</p>
           <p class="product-desc">${p.desc}</p>
           <p class="product-ingredients">成份：${p.ingredients}</p>
           ${qtyHTML}

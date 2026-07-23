@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-//  cart.js — 購物車邏輯
+//  cart.js — 購物車邏輯 v7.0 N顆1組設置標籤 2026.07.23
 // ═══════════════════════════════════════
 
 // ── 運費設定 ──
@@ -35,15 +35,13 @@ function addToCart(productId) {
   const stock    = product.stock ?? 99;
 
   // 庫存檢查
-  if (inCart + qty > stock) {
-    const canAdd = stock - inCart;
+  const unit = product.bundleQty > 0 ? '組' : '顆';
     if (canAdd <= 0) {
-      showStockToast(`「${product.name}」庫存已達上限（${stock} 顆）`);
+      showStockToast(`「${product.name}」庫存已達上限（${stock} ${unit}）`);
       return;
     }
-    // 只加到庫存上限
     existing ? existing.qty = stock : cart.push({ ...product, qty: stock });
-    showStockToast(`「${product.name}」最多只能加 ${stock} 顆`);
+    showStockToast(`「${product.name}」最多只能加 ${stock} ${unit}`);
     pageQty[productId] = 1;
     const el = document.getElementById('qty-' + productId);
     if (el) el.textContent = 1;
@@ -82,7 +80,8 @@ function ciQty(index, delta) {
 
   if (delta > 0 && newQty > stock) {
     // 超過庫存，顯示提示
-    showStockToast(`「${item.name}」庫存僅剩 ${stock} 顆`);
+    const unit = product ? (product.bundleQty > 0 ? '組' : '顆') : '顆';
+    showStockToast(`「${item.name}」庫存僅剩 ${stock} ${unit}`);
     item.qty = stock; // 設定為上限
     renderCart();
     return;
@@ -181,18 +180,20 @@ function renderCart() {
     const isLow    = stock > 0 && stock <= 3;
     const isSoldOut = stock <= 0;
 
-    // 庫存提示文字（僅剩 X 顆 或 已售完，沒有則隱藏）
+// 庫存提示文字（僅剩 X 顆 或 已售完，沒有則隱藏）
+    const unit = product?.badge === '2顆1組' ? '組' : '顆';
+ const unit = product?.bundleQty > 0 ? '組' : '顆';
     const stockHint = isSoldOut
       ? `<div class="cart-stock-hint cart-stock-hint--out">已售完</div>`
       : isLow
-        ? `<div class="cart-stock-hint cart-stock-hint--low">⚡ 僅剩 ${stock} 顆</div>`
+        ? `<div class="cart-stock-hint cart-stock-hint--low">⚡ 僅剩 ${stock} ${unit}</div>`
         : '';
 
     return `
       <div class="cart-item">
         <div class="cart-item-info">
           <div class="cart-item-name">${item.name}</div>
-          <div class="cart-item-price">$${item.price} / 顆</div>
+          <div class="cart-item-price">$${item.price} / ${product?.bundleQty > 0 ? '組' : '顆'}</div>
           ${stockHint}
         </div>
         <div class="cart-item-right">
