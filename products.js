@@ -3,7 +3,7 @@
 // App Script 標籤新增2顆1組
 // ═══════════════════════════════════════════════════════
 
-const STOCK_API_URL = 'https://script.google.com/macros/s/AKfycbwKYw7a7qJzOUPi0673wy-uWkkv3BWzYxc8oMqGUSwrSBobFyPhDNCG2Z4IzY1fGJpCGw/exec';
+const STOCK_API_URL = 'https://script.google.com/macros/s/AKfycbznHOB25BE-EjyNB8hmMcXVH8i4-QVG1KzgcEzElvd12BmVHMhy5FLxc7FaLqF8GOVxgw/exec';
 
 // 全域商品陣列（cart.js 也會使用這個陣列）
 let PRODUCTS = [];
