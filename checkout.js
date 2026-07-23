@@ -846,7 +846,8 @@ function confirmOrder(btn) {
         cart.splice(i, 1);
         hasIssue = true;
       } else if (item.qty > stock) {
-        messages.push(`「${item.name}」庫存僅剩 ${stock} 顆，數量已自動調整`);
+        const unit = p?.bundleQty > 0 ? '組' : '顆';
+        messages.push(`「${item.name}」庫存僅剩 ${stock} ${unit}，數量已自動調整`);
         item.qty = stock;
         hasIssue = true;
       }
